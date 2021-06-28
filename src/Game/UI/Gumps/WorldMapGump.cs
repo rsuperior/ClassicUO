@@ -45,7 +45,7 @@ using ClassicUO.Input;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
@@ -115,7 +115,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             LoadSettings();
 
-            GameActions.Print(ResGumps.WorldMapLoading, 0x35);
+            GameActions.Print(LocalizationManager.Get(LocalizationProperties.WorldMapLoading), 0x35);
             Load();
             OnResize();
 
@@ -244,31 +244,31 @@ namespace ClassicUO.Game.UI.Gumps
         {
             _options.Clear();
 
-            _options["show_all_markers"] = new ContextMenuItemEntry(ResGumps.ShowAllMarkers, () => { _showMarkers = !_showMarkers; }, true, _showMarkers);
+            _options["show_all_markers"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowAllMarkers), () => { _showMarkers = !_showMarkers; }, true, _showMarkers);
 
-            _options["show_marker_names"] = new ContextMenuItemEntry(ResGumps.ShowMarkerNames, () => { _showMarkerNames = !_showMarkerNames; }, true, _showMarkerNames);
+            _options["show_marker_names"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowMarkerNames), () => { _showMarkerNames = !_showMarkerNames; }, true, _showMarkerNames);
 
-            _options["show_marker_icons"] = new ContextMenuItemEntry(ResGumps.ShowMarkerIcons, () => { _showMarkerIcons = !_showMarkerIcons; }, true, _showMarkerIcons);
+            _options["show_marker_icons"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowMarkerIcons), () => { _showMarkerIcons = !_showMarkerIcons; }, true, _showMarkerIcons);
 
-            _options["flip_map"] = new ContextMenuItemEntry(ResGumps.FlipMap, () => { _flipMap = !_flipMap; }, true, _flipMap);
+            _options["flip_map"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.FlipMap), () => { _flipMap = !_flipMap; }, true, _flipMap);
 
             _options["goto_location"] = new ContextMenuItemEntry
             (
-                ResGumps.GotoLocation,
+                LocalizationManager.Get(LocalizationProperties.GotoLocation),
                 () =>
                 {
                     EntryDialog dialog = new EntryDialog
                     (
                         250,
                         150,
-                        ResGumps.EnterLocation,
+                        LocalizationManager.Get(LocalizationProperties.EnterLocation),
                         name =>
                         {
                             _gotoMarker = null;
 
                             if (string.IsNullOrWhiteSpace(name))
                             {
-                                GameActions.Print(ResGumps.InvalidLocation, 0x35);
+                                GameActions.Print(LocalizationManager.Get(LocalizationProperties.InvalidLocation), 0x35);
 
                                 return;
                             }
@@ -286,19 +286,19 @@ namespace ClassicUO.Game.UI.Gumps
                                 }
                                 catch
                                 {
-                                    GameActions.Print(ResGumps.InvalidLocation, 0x35);
+                                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.InvalidLocation), 0x35);
                                 }
                             }
                             else
                             {
                                 if (!int.TryParse(coords[0], out x))
                                 {
-                                    GameActions.Print(ResGumps.InvalidLocation, 0x35);
+                                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.InvalidLocation), 0x35);
                                 }
 
                                 if (!int.TryParse(coords[1], out y))
                                 {
-                                    GameActions.Print(ResGumps.InvalidLocation, 0x35);
+                                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.InvalidLocation), 0x35);
                                 }
                             }
 
@@ -329,13 +329,13 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             );
 
-            _options["top_most"] = new ContextMenuItemEntry(ResGumps.TopMost, () => { TopMost = !TopMost; }, true, _isTopMost);
+            _options["top_most"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.TopMost), () => { TopMost = !TopMost; }, true, _isTopMost);
 
-            _options["free_view"] = new ContextMenuItemEntry(ResGumps.FreeView, () => { FreeView = !FreeView; }, true, FreeView);
+            _options["free_view"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.FreeView), () => { FreeView = !FreeView; }, true, FreeView);
 
             _options["show_party_members"] = new ContextMenuItemEntry
             (
-                ResGumps.ShowPartyMembers,
+                LocalizationManager.Get(LocalizationProperties.ShowPartyMembers),
                 () =>
                 {
                     _showPartyMembers = !_showPartyMembers;
@@ -346,21 +346,21 @@ namespace ClassicUO.Game.UI.Gumps
                 _showPartyMembers
             );
 
-            _options["show_mobiles"] = new ContextMenuItemEntry(ResGumps.ShowMobiles, () => { _showMobiles = !_showMobiles; }, true, _showMobiles);
+            _options["show_mobiles"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowMobiles), () => { _showMobiles = !_showMobiles; }, true, _showMobiles);
 
-            _options["show_multis"] = new ContextMenuItemEntry(ResGumps.ShowHousesBoats, () => { _showMultis = !_showMultis; }, true, _showMultis);
+            _options["show_multis"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowHousesBoats), () => { _showMultis = !_showMultis; }, true, _showMultis);
 
-            _options["show_your_name"] = new ContextMenuItemEntry(ResGumps.ShowYourName, () => { _showPlayerName = !_showPlayerName; }, true, _showPlayerName);
+            _options["show_your_name"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowYourName), () => { _showPlayerName = !_showPlayerName; }, true, _showPlayerName);
 
-            _options["show_your_healthbar"] = new ContextMenuItemEntry(ResGumps.ShowYourHealthbar, () => { _showPlayerBar = !_showPlayerBar; }, true, _showPlayerBar);
+            _options["show_your_healthbar"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowYourHealthbar), () => { _showPlayerBar = !_showPlayerBar; }, true, _showPlayerBar);
 
-            _options["show_party_name"] = new ContextMenuItemEntry(ResGumps.ShowGroupName, () => { _showGroupName = !_showGroupName; }, true, _showGroupName);
+            _options["show_party_name"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowGroupName), () => { _showGroupName = !_showGroupName; }, true, _showGroupName);
 
-            _options["show_party_healthbar"] = new ContextMenuItemEntry(ResGumps.ShowGroupHealthbar, () => { _showGroupBar = !_showGroupBar; }, true, _showGroupBar);
+            _options["show_party_healthbar"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowGroupHealthbar), () => { _showGroupBar = !_showGroupBar; }, true, _showGroupBar);
 
-            _options["show_coordinates"] = new ContextMenuItemEntry(ResGumps.ShowYourCoordinates, () => { _showCoordinates = !_showCoordinates; }, true, _showCoordinates);
+            _options["show_coordinates"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ShowYourCoordinates), () => { _showCoordinates = !_showCoordinates; }, true, _showCoordinates);
 
-            _options["saveclose"] = new ContextMenuItemEntry(ResGumps.SaveClose, Dispose);
+            _options["saveclose"] = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.SaveClose), Dispose);
         }
 
         private void BuildContextMenu()
@@ -370,16 +370,16 @@ namespace ClassicUO.Game.UI.Gumps
             ContextMenu?.Dispose();
             ContextMenu = new ContextMenuControl();
 
-            ContextMenuItemEntry markerFontEntry = new ContextMenuItemEntry(ResGumps.FontStyle);
-            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(ResGumps.Style0, 1), () => { SetFont(1); }));
-            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(ResGumps.Style0, 2), () => { SetFont(2); }));
-            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(ResGumps.Style0, 3), () => { SetFont(3); }));
-            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(ResGumps.Style0, 4), () => { SetFont(4); }));
-            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(ResGumps.Style0, 5), () => { SetFont(5); }));
-            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(ResGumps.Style0, 6), () => { SetFont(6); }));
+            ContextMenuItemEntry markerFontEntry = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.FontStyle));
+            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(LocalizationManager.Get(LocalizationProperties.Style0), 1), () => { SetFont(1); }));
+            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(LocalizationManager.Get(LocalizationProperties.Style0), 2), () => { SetFont(2); }));
+            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(LocalizationManager.Get(LocalizationProperties.Style0), 3), () => { SetFont(3); }));
+            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(LocalizationManager.Get(LocalizationProperties.Style0), 4), () => { SetFont(4); }));
+            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(LocalizationManager.Get(LocalizationProperties.Style0), 5), () => { SetFont(5); }));
+            markerFontEntry.Add(new ContextMenuItemEntry(string.Format(LocalizationManager.Get(LocalizationProperties.Style0), 6), () => { SetFont(6); }));
 
-            ContextMenuItemEntry markersEntry = new ContextMenuItemEntry(ResGumps.MapMarkerOptions);
-            markersEntry.Add(new ContextMenuItemEntry(ResGumps.ReloadMarkers, LoadMarkers));
+            ContextMenuItemEntry markersEntry = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.MapMarkerOptions));
+            markersEntry.Add(new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.ReloadMarkers), LoadMarkers));
 
             markersEntry.Add(markerFontEntry);
 
@@ -395,7 +395,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     ContextMenuItemEntry entry = new ContextMenuItemEntry
                     (
-                        string.Format(ResGumps.ShowHide0, markerFile.Name),
+                        string.Format(LocalizationManager.Get(LocalizationProperties.ShowHide0), markerFile.Name),
                         () =>
                         {
                             markerFile.Hidden = !markerFile.Hidden;
@@ -424,13 +424,13 @@ namespace ClassicUO.Game.UI.Gumps
             }
             else
             {
-                markersEntry.Add(new ContextMenuItemEntry(ResGumps.NoMapFiles));
+                markersEntry.Add(new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.NoMapFiles)));
             }
 
 
             ContextMenu.Add(markersEntry);
 
-            ContextMenuItemEntry namesHpBarEntry = new ContextMenuItemEntry(ResGumps.NamesHealthbars);
+            ContextMenuItemEntry namesHpBarEntry = new ContextMenuItemEntry(LocalizationManager.Get(LocalizationProperties.NamesHealthbars));
             namesHpBarEntry.Add(_options["show_your_name"]);
             namesHpBarEntry.Add(_options["show_your_healthbar"]);
             namesHpBarEntry.Add(_options["show_party_name"]);
@@ -1182,7 +1182,7 @@ namespace ClassicUO.Game.UI.Gumps
                         }
 
 
-                        GameActions.Print(ResGumps.WorldMapLoaded, 0x48);
+                        GameActions.Print(LocalizationManager.Get(LocalizationProperties.WorldMapLoaded), 0x48);
                     }
                 }
             );
@@ -1197,7 +1197,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     _mapMarkersLoaded = false;
 
-                    GameActions.Print(ResGumps.LoadingWorldMapMarkers, 0x2A);
+                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.LoadingWorldMapMarkers), 0x2A);
 
                     foreach (Texture2D t in _markerIcons.Values)
                     {
@@ -1426,7 +1426,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                     _mapMarkersLoaded = true;
 
-                    GameActions.Print(string.Format(ResGumps.WorldMapMarkersLoaded0, count), 0x2A);
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.WorldMapMarkersLoaded0), count), 0x2A);
                 }
             }
 
@@ -2275,7 +2275,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (_showGroupName)
             {
-                string name = entity.Name ?? ResGumps.OutOfRange;
+                string name = entity.Name ?? LocalizationManager.Get(LocalizationProperties.OutOfRange);
                 Vector2 size = Fonts.Regular.MeasureString(entity.Name ?? name);
 
                 if (rotX + size.X / 2 > x + Width - 8)

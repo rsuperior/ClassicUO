@@ -33,7 +33,7 @@
 using System;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -71,7 +71,7 @@ namespace ClassicUO.Game.UI.Gumps
                     0,
                     0x00D0,
                     0x00D1,
-                    ResGumps.All,
+                    LocalizationManager.Get(LocalizationProperties.All),
                     color: 0xFFFF
                 )
                 {
@@ -86,7 +86,7 @@ namespace ClassicUO.Game.UI.Gumps
                     0,
                     0x00D0,
                     0x00D1,
-                    ResGumps.MobilesOnly,
+                    LocalizationManager.Get(LocalizationProperties.MobilesOnly),
                     color: 0xFFFF
                 )
                 {
@@ -102,7 +102,7 @@ namespace ClassicUO.Game.UI.Gumps
                     0,
                     0x00D0,
                     0x00D1,
-                    ResGumps.ItemsOnly,
+                    LocalizationManager.Get(LocalizationProperties.ItemsOnly),
                     color: 0xFFFF
                 )
                 {
@@ -118,7 +118,7 @@ namespace ClassicUO.Game.UI.Gumps
                     0,
                     0x00D0,
                     0x00D1,
-                    ResGumps.MobilesAndCorpsesOnly,
+                    LocalizationManager.Get(LocalizationProperties.MobilesAndCorpsesOnly),
                     color: 0xFFFF
                 )
                 {

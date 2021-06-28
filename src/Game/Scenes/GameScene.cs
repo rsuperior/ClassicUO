@@ -44,7 +44,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
@@ -134,23 +134,6 @@ namespace ClassicUO.Game.Scenes
             ItemHold.Clear();
             Hotkeys = new HotkeysManager();
             Macros = new MacroManager();
-
-            // #########################################################
-            // [FILE_FIX]
-            // TODO: this code is a workaround to port old macros to the new xml system.
-            if (ProfileManager.CurrentProfile.Macros != null)
-            {
-                for (int i = 0; i < ProfileManager.CurrentProfile.Macros.Length; i++)
-                {
-                    Macros.PushToBack(ProfileManager.CurrentProfile.Macros[i]);
-                }
-
-                Macros.Save();
-
-                ProfileManager.CurrentProfile.Macros = null;
-            }
-            // #########################################################
-
             Macros.Load();
 
             InfoBars = new InfoBarManager();
@@ -231,7 +214,7 @@ namespace ClassicUO.Game.Scenes
 
                     if (e.Parent == null || !SerialHelper.IsValid(e.Parent.Serial))
                     {
-                        name = ResGeneral.System;
+                        name = LocalizationManager.Get(LocalizationProperties.System);
                     }
                     else
                     {
@@ -243,7 +226,7 @@ namespace ClassicUO.Game.Scenes
                     break;
 
                 case MessageType.System:
-                    name = string.IsNullOrEmpty(e.Name) || e.Name.ToLowerInvariant() == "system" ? ResGeneral.System : e.Name;
+                    name = string.IsNullOrEmpty(e.Name) || e.Name.ToLowerInvariant() == "system" ? LocalizationManager.Get(LocalizationProperties.System) : e.Name;
 
                     text = e.Text;
 
@@ -261,7 +244,7 @@ namespace ClassicUO.Game.Scenes
                     break;
 
                 case MessageType.Label:
-                    name = ResGeneral.YouSee;
+                    name = LocalizationManager.Get(LocalizationProperties.YouSee);
                     text = e.Text;
 
                     break;
@@ -274,21 +257,21 @@ namespace ClassicUO.Game.Scenes
 
                 case MessageType.Party:
                     text = e.Text;
-                    name = string.Format(ResGeneral.Party0, e.Name);
+                    name = string.Format(LocalizationManager.Get(LocalizationProperties.Party0), e.Name);
                     hue = ProfileManager.CurrentProfile.PartyMessageHue;
 
                     break;
 
                 case MessageType.Alliance:
                     text = e.Text;
-                    name = string.Format(ResGeneral.Alliance0, e.Name);
+                    name = string.Format(LocalizationManager.Get(LocalizationProperties.Alliance0), e.Name);
                     hue = ProfileManager.CurrentProfile.AllyMessageHue;
 
                     break;
 
                 case MessageType.Guild:
                     text = e.Text;
-                    name = string.Format(ResGeneral.Guild0, e.Name);
+                    name = string.Format(LocalizationManager.Get(LocalizationProperties.Guild0), e.Name);
                     hue = ProfileManager.CurrentProfile.GuildMessageHue;
 
                     break;
@@ -385,7 +368,7 @@ namespace ClassicUO.Game.Scenes
                     (
                         200,
                         200,
-                        string.Format(ResGeneral.ConnectionLost0, StringHelper.AddSpaceBeforeCapital(e.ToString())),
+                        string.Format(LocalizationManager.Get(LocalizationProperties.ConnectionLost0), StringHelper.AddSpaceBeforeCapital(e.ToString())),
                         s =>
                         {
                             if (s)
@@ -404,7 +387,7 @@ namespace ClassicUO.Game.Scenes
             (
                 new QuestionGump
                 (
-                    ResGeneral.QuitPrompt,
+                    LocalizationManager.Get(LocalizationProperties.QuitPrompt),
                     s =>
                     {
                         if (s)
@@ -1189,7 +1172,7 @@ namespace ClassicUO.Game.Scenes
 
         private static readonly RenderedText _youAreDeadText = RenderedText.Create
         (
-            ResGeneral.YouAreDead,
+            LocalizationManager.Get(LocalizationProperties.YouAreDead),
             0xFFFF,
             3,
             false,
@@ -1228,7 +1211,7 @@ namespace ClassicUO.Game.Scenes
                 MessageManager.HandleMessage
                 (
                     World.Player,
-                    ResGeneral.StoppedFollowing,
+                    LocalizationManager.Get(LocalizationProperties.StoppedFollowing),
                     string.Empty,
                     0,
                     MessageType.Regular,

@@ -30,9 +30,15 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text.Encodings.Web;
+using System.Text.Json;
 using Microsoft.Xna.Framework;
-using TinyJson;
+using System.Text.Json.Serialization;
+using ClassicUO.Utility.Logging;
+using Microsoft.Xna.Framework.Design;
 
 namespace ClassicUO.Configuration
 {
@@ -43,64 +49,36 @@ namespace ClassicUO.Configuration
         public static string CustomSettingsFilepath = null;
 
 
-        [JsonProperty("username")] public string Username { get; set; } = string.Empty;
-
-        [JsonProperty("password")] public string Password { get; set; } = string.Empty;
-
-        [JsonProperty("ip")] public string IP { get; set; } = "127.0.0.1";
-
-        [JsonProperty("port")] public ushort Port { get; set; } = 2593;
-
-        [JsonProperty("ultimaonlinedirectory")]
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string IP { get; set; } = "127.0.0.1";
+        public ushort Port { get; set; } = 2593;
         public string UltimaOnlineDirectory { get; set; } = "";
-
-        [JsonProperty("profilespath")] public string ProfilesPath { get; set; } = string.Empty;
-
-        [JsonProperty("clientversion")] public string ClientVersion { get; set; } = string.Empty;
-
-        [JsonProperty("lastcharactername")] public string LastCharacterName { get; set; } = string.Empty;
-
-        [JsonProperty("lang")] public string Language { get; set; } = "";
-
-        [JsonProperty("lastservernum")] public ushort LastServerNum { get; set; } = 1;
-
-        [JsonProperty("last_server_name")] public string LastServerName { get; set; } = string.Empty;
-
-        [JsonProperty("fps")] public int FPS { get; set; } = 60;
-
-        [JsonProperty("window_position")] public Point? WindowPosition { get; set; }
-        [JsonProperty("window_size")] public Point? WindowSize { get; set; }
-
-        [JsonProperty("is_win_maximized")] public bool IsWindowMaximized { get; set; } = true;
-
-        [JsonProperty("saveaccount")] public bool SaveAccount { get; set; }
-
-        [JsonProperty("autologin")] public bool AutoLogin { get; set; }
-
-        [JsonProperty("reconnect")] public bool Reconnect { get; set; }
-
-        [JsonProperty("reconnect_time")] public int ReconnectTime { get; set; } = 1;
-
-        [JsonProperty("login_music")] public bool LoginMusic { get; set; } = true;
-
-        [JsonProperty("login_music_volume")] public int LoginMusicVolume { get; set; } = 70;
-
-        [JsonProperty("shard_type")] public int ShardType { get; set; } // 0 = normal (no customization), 1 = old, 2 = outlands??
-
-        [JsonProperty("fixed_time_step")] public bool FixedTimeStep { get; set; } = true;
-
-        [JsonProperty("run_mouse_in_separate_thread")]
+        public string ProfilesPath { get; set; } = string.Empty;
+        public string ClientVersion { get; set; } = string.Empty;
+        public string LastCharacterName { get; set; } = string.Empty;
+        public string Language { get; set; } = "";
+        public ushort LastServerNum { get; set; } = 1;
+        public string LastServerName { get; set; } = string.Empty;
+        public int FPS { get; set; } = 60;
+        public Point? WindowPosition { get; set; }
+        public Point? WindowSize { get; set; }
+        public bool IsWindowMaximized { get; set; } = true;
+        public bool SaveAccount { get; set; }
+        public bool AutoLogin { get; set; }
+        public bool Reconnect { get; set; }
+        public int ReconnectTime { get; set; } = 1;
+        public bool LoginMusic { get; set; } = true;
+        public int LoginMusicVolume { get; set; } = 70;
+        public int ShardType { get; set; } // 0 = normal (no customization), 1 = old, 2 = outlands??
+        public bool FixedTimeStep { get; set; } = true;
         public bool RunMouseInASeparateThread { get; set; } = true;
+        public byte ForceDriver { get; set; }
+        public bool UseVerdata { get; set; }
+        public string MapsLayouts { get; set; }
+        public byte Encryption { get; set; }
+        public string[] Plugins { get; set; } = Array.Empty<string>();
 
-        [JsonProperty("force_driver")] public byte ForceDriver { get; set; }
-
-        [JsonProperty("use_verdata")] public bool UseVerdata { get; set; }
-
-        [JsonProperty("maps_layouts")] public string MapsLayouts { get; set; }
-
-        [JsonProperty("encryption")] public byte Encryption { get; set; }
-
-        [JsonProperty("plugins")] public string[] Plugins { get; set; } = { @"./Assistant/Razor.dll" };
 
         public static string GetSettingsFilepath()
         {
@@ -117,27 +95,254 @@ namespace ClassicUO.Configuration
             return Path.Combine(CUOEnviroment.ExecutablePath, SETTINGS_FILENAME);
         }
 
+        public static Settings LoadFile(string path)
+        {
+            Settings settings = new Settings();
+
+            if (File.Exists(path))
+            {
+                using (JsonDocument doc = JsonDocument.Parse(File.ReadAllBytes(path)))
+                {
+                    JsonElement root = doc.RootElement;
+
+                    if (root.TryGetProperty("username", out var elem))
+                    {
+                        settings.Username = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("password", out elem))
+                    {
+                        settings.Password = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("ip", out elem))
+                    {
+                        settings.IP = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("port", out elem))
+                    {
+                        settings.Port = elem.GetUInt16();
+                    }
+
+                    if (root.TryGetProperty("ultimaonlinedirectory", out elem))
+                    {
+                        settings.UltimaOnlineDirectory = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("profilespath", out elem))
+                    {
+                        settings.ProfilesPath = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("clientversion", out elem))
+                    {
+                        settings.ClientVersion = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("lastcharactername", out elem))
+                    {
+                        settings.LastCharacterName = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("lang", out elem))
+                    {
+                        settings.Language = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("lastservernum", out elem))
+                    {
+                        settings.LastServerNum = elem.GetUInt16();
+                    }
+
+                    if (root.TryGetProperty("last_server_name", out elem))
+                    {
+                        settings.LastServerName = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("fps", out elem))
+                    {
+                        settings.FPS = elem.GetInt32();
+                    }
+
+                    if (root.TryGetProperty("window_position", out elem))
+                    {
+                        settings.WindowPosition = new Point(elem.GetProperty("X").GetInt32(), elem.GetProperty("Y").GetInt32());
+                    }
+
+                    if (root.TryGetProperty("window_size", out elem))
+                    {
+                        settings.WindowSize = new Point(elem.GetProperty("X").GetInt32(), elem.GetProperty("Y").GetInt32());
+                    }
+
+                    if (root.TryGetProperty("is_win_maximized", out elem))
+                    {
+                        settings.IsWindowMaximized = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("saveaccount", out elem))
+                    {
+                        settings.SaveAccount = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("reconnect", out elem))
+                    {
+                        settings.Reconnect = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("reconnect_time", out elem))
+                    {
+                        settings.ReconnectTime = elem.GetInt32();
+                    }
+
+                    if (root.TryGetProperty("login_music", out elem))
+                    {
+                        settings.LoginMusic = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("login_music_volume", out elem))
+                    {
+                        settings.LoginMusicVolume = elem.GetInt32();
+                    }
+
+                    if (root.TryGetProperty("shard_type", out elem))
+                    {
+                        settings.ShardType = elem.GetInt32();
+                    }
+
+                    if (root.TryGetProperty("fixed_time_step", out elem))
+                    {
+                        settings.FixedTimeStep = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("run_mouse_in_separate_thread", out elem))
+                    {
+                        settings.RunMouseInASeparateThread = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("force_driver", out elem))
+                    {
+                        settings.ForceDriver = elem.GetByte();
+                    }
+
+                    if (root.TryGetProperty("use_verdata", out elem))
+                    {
+                        settings.UseVerdata = elem.GetBoolean();
+                    }
+
+                    if (root.TryGetProperty("maps_layouts", out elem))
+                    {
+                        settings.MapsLayouts = elem.GetString();
+                    }
+
+                    if (root.TryGetProperty("encryption", out elem))
+                    {
+                        settings.Encryption = elem.GetByte();
+                    }
+
+                    if (root.TryGetProperty("plugins", out elem))
+                    {
+                        settings.Plugins = new string[elem.GetArrayLength()];
+                        int i = 0;
+                        foreach (var e in elem.EnumerateArray())
+                        {
+                            settings.Plugins[i++] = e.GetString();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Log.Warn($"settings not found in: '{path}'");
+            }
+            return settings;
+        }
+
 
         public void Save()
         {
-            // Make a copy of the settings object that we will use in the saving process
-            string json = this.Encode(true);
+            string file = GetSettingsFilepath();
 
-            Settings settingsToSave = json.Decode<Settings>(); // JsonConvert.DeserializeObject<Settings>(JsonConvert.SerializeObject(this));
-
-            // Make sure we don't save username and password if `saveaccount` flag is not set
-            // NOTE: Even if we pass username and password via command-line arguments they won't be saved
-            if (!settingsToSave.SaveAccount)
+            using (FileStream fs = File.Create(file))
             {
-                settingsToSave.Username = string.Empty;
-                settingsToSave.Password = string.Empty;
+                using (Utf8JsonWriter writer = new Utf8JsonWriter(fs, new JsonWriterOptions()
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    Indented = true
+                }))
+                {
+                    writer.WriteStartObject();
+
+                    writer.WriteString("username", SaveAccount ? Username : string.Empty);
+                    writer.WriteString("password", SaveAccount ? Password : string.Empty);
+                    writer.WriteString("ip", IP);
+                    writer.WriteNumber("port", Port);
+                    writer.WriteString("ultimaonlinedirectory", UltimaOnlineDirectory);
+                    writer.WriteString("profilespath", string.Empty);
+                    writer.WriteString("clientversion", ClientVersion);
+                    writer.WriteString("lastcharactername", LastCharacterName);
+                    writer.WriteString("lang", Language);
+                    writer.WriteNumber("lastservernum", LastServerNum);
+                    writer.WriteString("last_server_name", LastServerName);
+                    writer.WriteNumber("fps", FPS);
+
+                    writer.WriteStartObject("window_position");
+                    if (WindowPosition.HasValue)
+                    {
+                        writer.WriteNumber("X", WindowPosition.Value.X);
+                        writer.WriteNumber("Y", WindowPosition.Value.Y);
+                    }
+                    else
+                    {
+                        writer.WriteNullValue();
+                    }
+                    writer.WriteEndObject();
+
+                    writer.WriteStartObject("window_size");
+                    if (WindowPosition.HasValue)
+                    {
+                        writer.WriteNumber("X", WindowSize.Value.X);
+                        writer.WriteNumber("Y", WindowSize.Value.Y);
+                    }
+                    else
+                    {
+                        writer.WriteNullValue();
+                    }
+                    writer.WriteEndObject();
+
+                    writer.WriteBoolean("is_win_maximized", IsWindowMaximized);
+                    writer.WriteBoolean("saveaccount", SaveAccount);
+                    writer.WriteBoolean("autologin", AutoLogin);
+                    writer.WriteBoolean("reconnect", Reconnect);
+                    writer.WriteNumber("reconnect_time", ReconnectTime);
+                    writer.WriteBoolean("login_music", LoginMusic);
+                    writer.WriteNumber("login_music_volume", LoginMusicVolume);
+                    writer.WriteNumber("shard_type", ShardType);
+                    writer.WriteBoolean("fixed_time_step", FixedTimeStep);
+                    writer.WriteBoolean("run_mouse_in_separate_thread", RunMouseInASeparateThread);
+                    writer.WriteNumber("force_driver", ForceDriver);
+                    writer.WriteBoolean("use_verdata", UseVerdata);
+                    writer.WriteString("maps_layouts", MapsLayouts);
+                    writer.WriteNumber("encryption", Encryption);
+                    writer.WriteStartArray("plugins");
+
+                    if (Plugins == null)
+                    {
+                        writer.WriteNullValue();
+                    }
+                    else
+                    {
+                        foreach (string plugin in Plugins)
+                        {
+                            writer.WriteStringValue(plugin);
+                        }
+                    }
+
+                    writer.WriteEndArray();
+
+                    writer.WriteEndObject();
+                }
             }
-
-            settingsToSave.ProfilesPath = string.Empty;
-
-            // NOTE: We can do any other settings clean-ups here before we save them
-
-            ConfigurationResolver.Save(settingsToSave, GetSettingsFilepath());
         }
     }
 }

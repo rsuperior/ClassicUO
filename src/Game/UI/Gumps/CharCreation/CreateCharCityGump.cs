@@ -37,7 +37,7 @@ using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
 using MathHelper = ClassicUO.Utility.MathHelper;
@@ -94,7 +94,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
 
             if (city == null)
             {
-                Log.Error(ResGumps.NoCityFound);
+                Log.Error(LocalizationManager.Get(LocalizationProperties.NoCityFound));
                 Dispose();
 
                 return;

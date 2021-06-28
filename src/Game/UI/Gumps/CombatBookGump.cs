@@ -38,7 +38,7 @@ using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -112,7 +112,7 @@ namespace ClassicUO.Game.UI.Gumps
                         spellsOnPage = 4;
                     }
 
-                    Label text = new Label(ResGumps.Index, false, 0x0288, font: 6) { X = indexX, Y = 6 };
+                    Label text = new Label(LocalizationManager.Get(LocalizationProperties.Index), false, 0x0288, font: 6) { X = indexX, Y = 6 };
                     Add(text, page);
 
                     for (int i = 0; i < spellsOnPage; i++)
@@ -165,7 +165,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                         text = new Label
                         (
-                            ResGumps.PrimaryAbilityIcon,
+                            LocalizationManager.Get(LocalizationProperties.PrimaryAbilityIcon),
                             false,
                             0x0288,
                             80,
@@ -184,7 +184,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                         text = new Label
                         (
-                            ResGumps.SecondaryAbilityIcon,
+                            LocalizationManager.Get(LocalizationProperties.SecondaryAbilityIcon),
                             false,
                             0x0288,
                             80,

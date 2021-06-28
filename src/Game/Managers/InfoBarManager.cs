@@ -36,28 +36,15 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using ClassicUO.Configuration;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility.Logging;
 
 namespace ClassicUO.Game.Managers
 {
     internal class InfoBarManager
     {
-        private readonly List<InfoBarItem> infoBarItems;
-
-        public InfoBarManager()
-        {
-            infoBarItems = new List<InfoBarItem>();
-
-            if (ProfileManager.CurrentProfile.InfoBarItems != null)
-            {
-                infoBarItems.AddRange(ProfileManager.CurrentProfile.InfoBarItems);
-
-                ProfileManager.CurrentProfile.InfoBarItems = null;
-                Save();
-            }
-        }
-
+        private readonly List<InfoBarItem> infoBarItems = new List<InfoBarItem>();
+        
         public List<InfoBarItem> GetInfoBars()
         {
             return infoBarItems;
@@ -156,10 +143,10 @@ namespace ClassicUO.Game.Managers
             infoBarItems.Clear();
 
             infoBarItems.Add(new InfoBarItem("", InfoBarVars.NameNotoriety, 0x3D2));
-            infoBarItems.Add(new InfoBarItem(ResGeneral.Hits, InfoBarVars.HP, 0x1B6));
-            infoBarItems.Add(new InfoBarItem(ResGeneral.Mana, InfoBarVars.Mana, 0x1ED));
-            infoBarItems.Add(new InfoBarItem(ResGeneral.Stam, InfoBarVars.Stamina, 0x22E));
-            infoBarItems.Add(new InfoBarItem(ResGeneral.Weight, InfoBarVars.Weight, 0x3D2));
+            infoBarItems.Add(new InfoBarItem(LocalizationManager.Get(LocalizationProperties.Hits), InfoBarVars.HP, 0x1B6));
+            infoBarItems.Add(new InfoBarItem(LocalizationManager.Get(LocalizationProperties.Mana), InfoBarVars.Mana, 0x1ED));
+            infoBarItems.Add(new InfoBarItem(LocalizationManager.Get(LocalizationProperties.Stam), InfoBarVars.Stamina, 0x22E));
+            infoBarItems.Add(new InfoBarItem(LocalizationManager.Get(LocalizationProperties.Weight), InfoBarVars.Weight, 0x3D2));
         }
     }
 

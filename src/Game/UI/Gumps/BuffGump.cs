@@ -40,7 +40,7 @@ using ClassicUO.Game.Data;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -315,7 +315,7 @@ namespace ClassicUO.Game.UI.Gumps
                         (
                             string.Format
                             (
-                                ResGumps.TimeLeft,
+                                LocalizationManager.Get(LocalizationProperties.TimeLeft),
                                 Icon.Text,
                                 span.Hours,
                                 span.Minutes,
@@ -327,7 +327,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                         if (span.Hours > 0)
                         {
-                            _gText.Text = string.Format(ResGumps.Span0Hours, span.Hours);
+                            _gText.Text = string.Format(LocalizationManager.Get(LocalizationProperties.Span0Hours), span.Hours);
                         }
                         else
                         {

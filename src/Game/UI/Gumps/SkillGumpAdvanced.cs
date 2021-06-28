@@ -39,7 +39,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -117,7 +117,7 @@ namespace ClassicUO.Game.UI.Gumps
                     180,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.Name
+                    LocalizationManager.Get(LocalizationProperties.Name)
                 )
                 {
                     ButtonParameter = (int) Buttons.SortName,
@@ -136,7 +136,7 @@ namespace ClassicUO.Game.UI.Gumps
                     80,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.Real
+                    LocalizationManager.Get(LocalizationProperties.Real)
                 )
                 {
                     ButtonParameter = (int) Buttons.SortReal,
@@ -154,7 +154,7 @@ namespace ClassicUO.Game.UI.Gumps
                     80,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.Base
+                    LocalizationManager.Get(LocalizationProperties.Base)
                 )
                 {
                     ButtonParameter = (int) Buttons.SortBase,
@@ -172,7 +172,7 @@ namespace ClassicUO.Game.UI.Gumps
                     80,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.Cap
+                    LocalizationManager.Get(LocalizationProperties.Cap)
                 )
                 {
                     ButtonParameter = (int) Buttons.SortCap,
@@ -290,7 +290,7 @@ namespace ClassicUO.Game.UI.Gumps
             _databox.WantUpdateSize = true;
             _databox.ReArrangeChildren();
 
-            Add(new Label(ResGumps.Total, true, 1153) { X = 40, Y = 320 });
+            Add(new Label(LocalizationManager.Get(LocalizationProperties.Total), true, 1153) { X = 40, Y = 320 });
             Add(new Label(_totalReal.ToString("F1"), true, 1153) { X = 220, Y = 320 });
             Add(new Label(_totalValue.ToString("F1"), true, 1153) { X = 300, Y = 320 });
         }

@@ -32,7 +32,7 @@
 
 using System;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.Data
 {
@@ -40,48 +40,48 @@ namespace ClassicUO.Game.Data
     {
         private static readonly Tuple<int, string>[] _loginErrors =
         {
-            Tuple.Create(3000007, ResErrorMessages.IncorrectPassword),
-            Tuple.Create(3000009, ResErrorMessages.CharacterDoesNotExist),
-            Tuple.Create(3000006, ResErrorMessages.CharacterAlreadyExists),
-            Tuple.Create(3000016, ResErrorMessages.ClientCouldNotAttachToServer),
-            Tuple.Create(3000017, ResErrorMessages.ClientCouldNotAttachToServer),
-            Tuple.Create(3000012, ResErrorMessages.AnotherCharacterOnline),
-            Tuple.Create(3000013, ResErrorMessages.ErrorInSynchronization),
-            Tuple.Create(3000005, ResErrorMessages.IdleTooLong),
-            Tuple.Create(-1, ResErrorMessages.CouldNotAttachServer),
-            Tuple.Create(-1, ResErrorMessages.CharacterTransferInProgress)
+            Tuple.Create(3000007, LocalizationManager.Get(LocalizationProperties.IncorrectPassword)),
+            Tuple.Create(3000009, LocalizationManager.Get(LocalizationProperties.CharacterDoesNotExist)),
+            Tuple.Create(3000006, LocalizationManager.Get(LocalizationProperties.CharacterAlreadyExists)),
+            Tuple.Create(3000016, LocalizationManager.Get(LocalizationProperties.ClientCouldNotAttachToServer)),
+            Tuple.Create(3000017, LocalizationManager.Get(LocalizationProperties.ClientCouldNotAttachToServer)),
+            Tuple.Create(3000012, LocalizationManager.Get(LocalizationProperties.AnotherCharacterOnline)),
+            Tuple.Create(3000013, LocalizationManager.Get(LocalizationProperties.ErrorInSynchronization)),
+            Tuple.Create(3000005, LocalizationManager.Get(LocalizationProperties.IdleTooLong)),
+            Tuple.Create(-1, LocalizationManager.Get(LocalizationProperties.CouldNotAttachServer)),
+            Tuple.Create(-1, LocalizationManager.Get(LocalizationProperties.CharacterTransferInProgress))
         };
 
         private static readonly Tuple<int, string>[] _errorCode =
         {
-            Tuple.Create(3000018, ResErrorMessages.CharacterPasswordInvalid),
-            Tuple.Create(3000019, ResErrorMessages.ThatCharacterDoesNotExist),
-            Tuple.Create(3000020, ResErrorMessages.ThatCharacterIsBeingPlayed),
-            Tuple.Create(3000021, ResErrorMessages.CharacterIsNotOldEnough),
-            Tuple.Create(3000022, ResErrorMessages.CharacterIsQueuedForBackup),
-            Tuple.Create(3000023, ResErrorMessages.CouldntCarryOutYourRequest)
+            Tuple.Create(3000018, LocalizationManager.Get(LocalizationProperties.CharacterPasswordInvalid)),
+            Tuple.Create(3000019, LocalizationManager.Get(LocalizationProperties.ThatCharacterDoesNotExist)),
+            Tuple.Create(3000020, LocalizationManager.Get(LocalizationProperties.ThatCharacterIsBeingPlayed)),
+            Tuple.Create(3000021, LocalizationManager.Get(LocalizationProperties.CharacterIsNotOldEnough)),
+            Tuple.Create(3000022, LocalizationManager.Get(LocalizationProperties.CharacterIsQueuedForBackup)),
+            Tuple.Create(3000023, LocalizationManager.Get(LocalizationProperties.CouldntCarryOutYourRequest))
         };
 
         private static readonly Tuple<int, string>[] _pickUpErrors =
         {
-            Tuple.Create(3000267, ResErrorMessages.YouCanNotPickThatUp),
-            Tuple.Create(3000268, ResErrorMessages.ThatIsTooFarAway),
-            Tuple.Create(3000269, ResErrorMessages.ThatIsOutOfSight),
-            Tuple.Create(3000270, ResErrorMessages.ThatItemDoesNotBelongToYou),
-            Tuple.Create(3000271, ResErrorMessages.YouAreAlreadyHoldingAnItem)
+            Tuple.Create(3000267, LocalizationManager.Get(LocalizationProperties.YouCanNotPickThatUp)),
+            Tuple.Create(3000268, LocalizationManager.Get(LocalizationProperties.ThatIsTooFarAway)),
+            Tuple.Create(3000269, LocalizationManager.Get(LocalizationProperties.ThatIsOutOfSight)),
+            Tuple.Create(3000270, LocalizationManager.Get(LocalizationProperties.ThatItemDoesNotBelongToYou)),
+            Tuple.Create(3000271, LocalizationManager.Get(LocalizationProperties.YouAreAlreadyHoldingAnItem))
         };
 
         private static readonly Tuple<int, string>[] _generalErrors =
         {
-            Tuple.Create(3000007, ResErrorMessages.IncorrectNamePassword),
-            Tuple.Create(3000034, ResErrorMessages.SomeoneIsAlreadyUsingThisAccount),
-            Tuple.Create(3000035, ResErrorMessages.YourAccountHasBeenBlocked),
-            Tuple.Create(3000036, ResErrorMessages.YourAccountCredentialsAreInvalid),
-            Tuple.Create(-1, ResErrorMessages.CommunicationProblem),
-            Tuple.Create(-1, ResErrorMessages.TheIGRConcurrencyLimitHasBeenMet),
-            Tuple.Create(-1, ResErrorMessages.TheIGRTimeLimitHasBeenMet),
-            Tuple.Create(-1, ResErrorMessages.GeneralIGRAuthenticationFailure),
-            Tuple.Create(3000037, ResErrorMessages.CouldntConnectToUO)
+            Tuple.Create(3000007, LocalizationManager.Get(LocalizationProperties.IncorrectNamePassword)),
+            Tuple.Create(3000034, LocalizationManager.Get(LocalizationProperties.SomeoneIsAlreadyUsingThisAccount)),
+            Tuple.Create(3000035, LocalizationManager.Get(LocalizationProperties.YourAccountHasBeenBlocked)),
+            Tuple.Create(3000036, LocalizationManager.Get(LocalizationProperties.YourAccountCredentialsAreInvalid)),
+            Tuple.Create(-1, LocalizationManager.Get(LocalizationProperties.CommunicationProblem)),
+            Tuple.Create(-1, LocalizationManager.Get(LocalizationProperties.TheIGRConcurrencyLimitHasBeenMet)),
+            Tuple.Create(-1, LocalizationManager.Get(LocalizationProperties.TheIGRTimeLimitHasBeenMet)),
+            Tuple.Create(-1, LocalizationManager.Get(LocalizationProperties.GeneralIGRAuthenticationFailure)),
+            Tuple.Create(3000037, LocalizationManager.Get(LocalizationProperties.CouldntConnectToUO))
         };
 
         public static string GetError(byte packetID, byte code)

@@ -32,7 +32,7 @@
 
 using ClassicUO.Game.Managers;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Controls
 {
@@ -75,7 +75,7 @@ namespace ClassicUO.Game.UI.Controls
                 60,
                 25,
                 ButtonAction.Activate,
-                ResGumps.Delete
+                LocalizationManager.Get(LocalizationProperties.Delete)
             ) { ButtonParameter = 999 };
 
             deleteButton.MouseUp += (sender, e) =>

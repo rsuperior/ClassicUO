@@ -40,7 +40,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -750,7 +750,7 @@ namespace ClassicUO.Game.UI.Gumps
                     return;
                 }
 
-                string subname = string.Format(ResGumps.Item0Price1, itemName, Price);
+                string subname = string.Format(LocalizationManager.Get(LocalizationProperties.Item0Price1), itemName, Price);
 
                 Add
                 (
@@ -878,7 +878,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             public void SetName(string s, bool new_name)
             {
-                _name.Text = new_name ? $"{s}: {Price}" : string.Format(ResGumps.Item0Price1, s, Price);
+                _name.Text = new_name ? $"{s}: {Price}" : string.Format(LocalizationManager.Get(LocalizationProperties.Item0Price1), s, Price);
                 WantUpdateSize = true;
             }
 

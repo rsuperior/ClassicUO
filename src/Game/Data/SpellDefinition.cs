@@ -34,7 +34,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using ClassicUO.Game.Managers;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 
 namespace ClassicUO.Game.Data
@@ -170,68 +170,68 @@ namespace ClassicUO.Game.Data
                     {
                         // britanian reagents
                         case Reagents.BlackPearl:
-                            sb.Append(ResGeneral.BlackPearl);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.BlackPearl));
 
                             break;
 
                         case Reagents.Bloodmoss:
-                            sb.Append(ResGeneral.Bloodmoss);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.Bloodmoss));
 
                             break;
 
                         case Reagents.Garlic:
-                            sb.Append(ResGeneral.Garlic);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.Garlic));
 
                             break;
 
                         case Reagents.Ginseng:
-                            sb.Append(ResGeneral.Ginseng);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.Ginseng));
 
                             break;
 
                         case Reagents.MandrakeRoot:
-                            sb.Append(ResGeneral.MandrakeRoot);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.MandrakeRoot));
 
                             break;
 
                         case Reagents.Nightshade:
-                            sb.Append(ResGeneral.Nightshade);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.Nightshade));
 
                             break;
 
                         case Reagents.SulfurousAsh:
-                            sb.Append(ResGeneral.SulfurousAsh);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.SulfurousAsh));
 
                             break;
 
                         case Reagents.SpidersSilk:
-                            sb.Append(ResGeneral.SpidersSilk);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.SpidersSilk));
 
                             break;
 
                         // pagan reagents
                         case Reagents.BatWing:
-                            sb.Append(ResGeneral.BatWing);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.BatWing));
 
                             break;
 
                         case Reagents.GraveDust:
-                            sb.Append(ResGeneral.GraveDust);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.GraveDust));
 
                             break;
 
                         case Reagents.DaemonBlood:
-                            sb.Append(ResGeneral.DaemonBlood);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.DaemonBlood));
 
                             break;
 
                         case Reagents.NoxCrystal:
-                            sb.Append(ResGeneral.NoxCrystal);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.NoxCrystal));
 
                             break;
 
                         case Reagents.PigIron:
-                            sb.Append(ResGeneral.PigIron);
+                            sb.Append(LocalizationManager.Get(LocalizationProperties.PigIron));
 
                             break;
 

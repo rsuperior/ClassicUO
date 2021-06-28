@@ -38,7 +38,7 @@ using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.Managers
 {
@@ -386,7 +386,7 @@ namespace ClassicUO.Game.Managers
                         if (SerialHelper.IsItem(serial))
                         {
                             ProfileManager.CurrentProfile.GrabBagSerial = serial;
-                            GameActions.Print(string.Format(ResGeneral.GrabBagSet0, serial));
+                            GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.GrabBagSet0), serial));
                         }
 
                         ClearTargetingWithoutTargetCancelPacket();

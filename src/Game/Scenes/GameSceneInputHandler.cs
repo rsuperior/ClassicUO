@@ -40,7 +40,7 @@ using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using Microsoft.Xna.Framework;
 using SDL2;
@@ -691,7 +691,7 @@ namespace ClassicUO.Game.Scenes
                             MessageManager.HandleMessage
                             (
                                 World.Player,
-                                ResGeneral.NowFollowing,
+                                LocalizationManager.Get(LocalizationProperties.NowFollowing),
                                 string.Empty,
                                 0,
                                 MessageType.Regular,
@@ -845,7 +845,7 @@ namespace ClassicUO.Game.Scenes
                             World.Player.AddMessage
                             (
                                 MessageType.Label,
-                                ResGeneral.Pathfinding,
+                                LocalizationManager.Get(LocalizationProperties.Pathfinding),
                                 3,
                                 0,
                                 false,
@@ -860,7 +860,7 @@ namespace ClassicUO.Game.Scenes
                         World.Player.AddMessage
                         (
                             MessageType.Label,
-                            ResGeneral.Pathfinding,
+                            LocalizationManager.Get(LocalizationProperties.Pathfinding),
                             3,
                             0,
                             false,

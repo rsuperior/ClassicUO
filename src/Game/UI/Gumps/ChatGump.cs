@@ -37,7 +37,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -73,7 +73,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Label text = new Label
             (
-                ResGumps.Channels,
+                LocalizationManager.Get(LocalizationProperties.Channels),
                 false,
                 0x0386,
                 345,
@@ -134,7 +134,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             text = new Label
             (
-                ResGumps.YourCurrentChannel,
+                LocalizationManager.Get(LocalizationProperties.YourCurrentChannel),
                 false,
                 0x0386,
                 345,
@@ -198,7 +198,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             text = new Label
             (
-                ResGumps.Join,
+                LocalizationManager.Get(LocalizationProperties.Join),
                 false,
                 0x0386,
                 0,
@@ -213,7 +213,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             text = new Label
             (
-                ResGumps.Leave,
+                LocalizationManager.Get(LocalizationProperties.Leave),
                 false,
                 0x0386,
                 0,
@@ -228,7 +228,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             text = new Label
             (
-                ResGumps.Create,
+                LocalizationManager.Get(LocalizationProperties.Create),
                 false,
                 0x0386,
                 0,
@@ -343,7 +343,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 Label text = new Label
                 (
-                    ResGumps.CreateAChannel,
+                    LocalizationManager.Get(LocalizationProperties.CreateAChannel),
                     true,
                     0x23,
                     Width - 4,
@@ -370,7 +370,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 text = new Label
                 (
-                    ResGumps.Name,
+                    LocalizationManager.Get(LocalizationProperties.Name),
                     true,
                     0x23,
                     Width - 4,

@@ -34,16 +34,20 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
 using System.Threading;
 using ClassicUO.Configuration;
 using ClassicUO.Data;
 using ClassicUO.Game;
 using ClassicUO.IO;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
+using Microsoft.Xna.Framework;
 using SDL2;
 
 namespace ClassicUO
@@ -54,11 +58,13 @@ namespace ClassicUO
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool SetDllDirectory(string lpPathName);
 
+
         [STAThread]
         public static void Main(string[] args)
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
+            
 #if !NETFRAMEWORK
             DllMap.Initialise();
 #endif
@@ -134,7 +140,7 @@ namespace ClassicUO
                 }
             }
 
-            Settings.GlobalSettings = ConfigurationResolver.Load<Settings>(globalSettingsPath);
+            Settings.GlobalSettings = Settings.LoadFile(globalSettingsPath);
             CUOEnviroment.IsOutlands = Settings.GlobalSettings.ShardType == 2;
 
             ReadSettingsFromArgs(args);
@@ -146,12 +152,14 @@ namespace ClassicUO
                 Settings.GlobalSettings.Save();
             }
 
+#if NETFRAMEWORK
             if (!CUOEnviroment.IsUnix)
             {
                 string libsPath = Path.Combine(CUOEnviroment.ExecutablePath, Environment.Is64BitProcess ? "x64" : "x86");
 
                 SetDllDirectory(libsPath);
             }
+#endif
 
             if (string.IsNullOrWhiteSpace(Settings.GlobalSettings.Language))
             {
@@ -218,14 +226,14 @@ namespace ClassicUO
             {
                 if ((flags & INVALID_UO_DIRECTORY) != 0)
                 {
-                    Client.ShowErrorMessage(ResGeneral.YourUODirectoryIsInvalid);
+                    Client.ShowErrorMessage(LocalizationManager.Get(LocalizationProperties.YourUODirectoryIsInvalid));
                 }
                 else if ((flags & INVALID_UO_VERSION) != 0)
                 {
-                    Client.ShowErrorMessage(ResGeneral.YourUOClientVersionIsInvalid);
+                    Client.ShowErrorMessage(LocalizationManager.Get(LocalizationProperties.YourUOClientVersionIsInvalid));
                 }
 
-                PlatformHelper.LaunchBrowser(ResGeneral.ClassicUOLink);
+                PlatformHelper.LaunchBrowser(LocalizationManager.Get(LocalizationProperties.ClassicUOLink));
             }
             else
             {

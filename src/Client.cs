@@ -39,7 +39,7 @@ using ClassicUO.Game.Data;
 using ClassicUO.IO;
 using ClassicUO.Network;
 using ClassicUO.Network.Encryption;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
 using SDL2;
@@ -106,7 +106,7 @@ namespace ClassicUO
             if (!Directory.Exists(clientPath))
             {
                 Log.Error("Invalid client directory: " + clientPath);
-                ShowErrorMessage(string.Format(ResErrorMessages.ClientPathIsNotAValidUODirectory, clientPath));
+                ShowErrorMessage(string.Format(LocalizationManager.Get(LocalizationProperties.ClientPathIsNotAValidUODirectory), clientPath));
 
                 throw new InvalidClientDirectory($"'{clientPath}' is not a valid directory");
             }
@@ -120,7 +120,7 @@ namespace ClassicUO
                 if (!ClientVersionHelper.TryParseFromFile(Path.Combine(clientPath, "client.exe"), out clientVersionText) || !ClientVersionHelper.IsClientVersionValid(clientVersionText, out clientVersion))
                 {
                     Log.Error("Invalid client version: " + clientVersionText);
-                    ShowErrorMessage(string.Format(ResGumps.ImpossibleToDefineTheClientVersion0, clientVersionText));
+                    ShowErrorMessage(string.Format(LocalizationManager.Get(LocalizationProperties.ImpossibleToDefineTheClientVersion0), clientVersionText));
 
                     throw new InvalidClientVersion($"Invalid client version: '{clientVersionText}'");
                 }

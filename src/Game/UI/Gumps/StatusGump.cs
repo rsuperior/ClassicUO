@@ -38,7 +38,7 @@ using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -277,7 +277,7 @@ namespace ClassicUO.Game.UI.Gumps
             _labels[(int) MobileStats.Intelligence] = text;
             Add(text);
 
-            text = new Label(World.Player.IsFemale ? ResGumps.Female : ResGumps.Male, false, 0x0386, font: 1)
+            text = new Label(World.Player.IsFemale ? LocalizationManager.Get(LocalizationProperties.Female) : LocalizationManager.Get(LocalizationProperties.Male), false, 0x0386, font: 1)
             {
                 X = 86,
                 Y = 97
@@ -349,7 +349,7 @@ namespace ClassicUO.Game.UI.Gumps
                     61,
                     34,
                     12,
-                    ResGumps.Strength,
+                    LocalizationManager.Get(LocalizationProperties.Strength),
                     1
                 ) { CanMove = true }
             );
@@ -362,7 +362,7 @@ namespace ClassicUO.Game.UI.Gumps
                     73,
                     34,
                     12,
-                    ResGumps.Dex,
+                    LocalizationManager.Get(LocalizationProperties.Dex),
                     1
                 ) { CanMove = true }
             );
@@ -375,7 +375,7 @@ namespace ClassicUO.Game.UI.Gumps
                     85,
                     34,
                     12,
-                    ResGumps.Intelligence,
+                    LocalizationManager.Get(LocalizationProperties.Intelligence),
                     1
                 ) { CanMove = true }
             );
@@ -388,7 +388,7 @@ namespace ClassicUO.Game.UI.Gumps
                     97,
                     34,
                     12,
-                    ResGumps.Sex,
+                    LocalizationManager.Get(LocalizationProperties.Sex),
                     1
                 ) { CanMove = true }
             );
@@ -401,7 +401,7 @@ namespace ClassicUO.Game.UI.Gumps
                     109,
                     34,
                     12,
-                    ResGumps.Armor,
+                    LocalizationManager.Get(LocalizationProperties.Armor),
                     1
                 ) { CanMove = true }
             );
@@ -414,7 +414,7 @@ namespace ClassicUO.Game.UI.Gumps
                     61,
                     66,
                     12,
-                    ResGeneral.Hits,
+                    LocalizationManager.Get(LocalizationProperties.Hits),
                     1
                 ) { CanMove = true }
             );
@@ -427,7 +427,7 @@ namespace ClassicUO.Game.UI.Gumps
                     73,
                     66,
                     12,
-                    ResGeneral.Mana,
+                    LocalizationManager.Get(LocalizationProperties.Mana),
                     1
                 ) { CanMove = true }
             );
@@ -440,7 +440,7 @@ namespace ClassicUO.Game.UI.Gumps
                     85,
                     66,
                     12,
-                    ResGumps.Stamina,
+                    LocalizationManager.Get(LocalizationProperties.Stamina),
                     1
                 ) { CanMove = true }
             );
@@ -453,7 +453,7 @@ namespace ClassicUO.Game.UI.Gumps
                     97,
                     66,
                     12,
-                    ResGumps.Gold,
+                    LocalizationManager.Get(LocalizationProperties.Gold),
                     1
                 ) { CanMove = true }
             );
@@ -466,7 +466,7 @@ namespace ClassicUO.Game.UI.Gumps
                     109,
                     66,
                     12,
-                    ResGeneral.Weight,
+                    LocalizationManager.Get(LocalizationProperties.Weight),
                     1
                 ) { CanMove = true }
             );
@@ -493,7 +493,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 _labels[(int) MobileStats.Intelligence].Text = World.Player.Intelligence.ToString();
 
-                _labels[(int) MobileStats.Sex].Text = World.Player.IsFemale ? ResGumps.Female : ResGumps.Male;
+                _labels[(int) MobileStats.Sex].Text = World.Player.IsFemale ? LocalizationManager.Get(LocalizationProperties.Female) : LocalizationManager.Get(LocalizationProperties.Male);
 
                 _labels[(int) MobileStats.AR].Text = World.Player.PhysicalResistance.ToString();
 
@@ -646,7 +646,7 @@ namespace ClassicUO.Game.UI.Gumps
                             154,
                             59,
                             24,
-                            ResGumps.HitChanceIncrease,
+                            LocalizationManager.Get(LocalizationProperties.HitChanceIncrease),
                             1
                         ) { CanMove = true }
                     );
@@ -670,7 +670,7 @@ namespace ClassicUO.Game.UI.Gumps
                         70,
                         59,
                         24,
-                        ResGumps.Strength,
+                        LocalizationManager.Get(LocalizationProperties.Strength),
                         1
                     ) { CanMove = true }
                 );
@@ -683,7 +683,7 @@ namespace ClassicUO.Game.UI.Gumps
                         98,
                         59,
                         24,
-                        ResGumps.Dexterity,
+                        LocalizationManager.Get(LocalizationProperties.Dexterity),
                         1
                     ) { CanMove = true }
                 );
@@ -696,7 +696,7 @@ namespace ClassicUO.Game.UI.Gumps
                         126,
                         59,
                         24,
-                        ResGumps.Intelligence,
+                        LocalizationManager.Get(LocalizationProperties.Intelligence),
                         1
                     ) { CanMove = true }
                 );
@@ -717,7 +717,7 @@ namespace ClassicUO.Game.UI.Gumps
                             154,
                             59,
                             24,
-                            ResGumps.DefenseChanceIncrease,
+                            LocalizationManager.Get(LocalizationProperties.DefenseChanceIncrease),
                             1
                         ) { CanMove = true }
                     );
@@ -836,7 +836,7 @@ namespace ClassicUO.Game.UI.Gumps
                         70,
                         59,
                         24,
-                        ResGumps.HitPoints,
+                        LocalizationManager.Get(LocalizationProperties.HitPoints),
                         1
                     ) { CanMove = true }
                 );
@@ -849,7 +849,7 @@ namespace ClassicUO.Game.UI.Gumps
                         98,
                         59,
                         24,
-                        ResGumps.Stamina,
+                        LocalizationManager.Get(LocalizationProperties.Stamina),
                         1
                     ) { CanMove = true }
                 );
@@ -862,7 +862,7 @@ namespace ClassicUO.Game.UI.Gumps
                         126,
                         59,
                         24,
-                        ResGeneral.Mana,
+                        LocalizationManager.Get(LocalizationProperties.Mana),
                         1
                     ) { CanMove = true }
                 );
@@ -881,7 +881,7 @@ namespace ClassicUO.Game.UI.Gumps
                             154,
                             65,
                             24,
-                            ResGumps.LowerManaCost,
+                            LocalizationManager.Get(LocalizationProperties.LowerManaCost),
                             1
                         ) { CanMove = true }
                     );
@@ -940,7 +940,7 @@ namespace ClassicUO.Game.UI.Gumps
                         70,
                         65,
                         24,
-                        ResGumps.MaximumStats,
+                        LocalizationManager.Get(LocalizationProperties.MaximumStats),
                         1
                     ) { CanMove = true }
                 );
@@ -953,7 +953,7 @@ namespace ClassicUO.Game.UI.Gumps
                         98,
                         65,
                         24,
-                        ResGumps.Luck,
+                        LocalizationManager.Get(LocalizationProperties.Luck),
                         1
                     ) { CanMove = true }
                 );
@@ -966,7 +966,7 @@ namespace ClassicUO.Game.UI.Gumps
                         126,
                         65,
                         24,
-                        ResGeneral.Weight,
+                        LocalizationManager.Get(LocalizationProperties.Weight),
                         1
                     ) { CanMove = true }
                 );
@@ -987,7 +987,7 @@ namespace ClassicUO.Game.UI.Gumps
                             98,
                             69,
                             24,
-                            ResGumps.WeaponDamageIncrease,
+                            LocalizationManager.Get(LocalizationProperties.WeaponDamageIncrease),
                             1
                         ) { CanMove = true }
                     );
@@ -1000,7 +1000,7 @@ namespace ClassicUO.Game.UI.Gumps
                             154,
                             69,
                             24,
-                            ResGumps.SwingSpeedIncrease,
+                            LocalizationManager.Get(LocalizationProperties.SwingSpeedIncrease),
                             1
                         ) { CanMove = true }
                     );
@@ -1019,7 +1019,7 @@ namespace ClassicUO.Game.UI.Gumps
                             98,
                             69,
                             24,
-                            ResGumps.Gold,
+                            LocalizationManager.Get(LocalizationProperties.Gold),
                             1
                         ) { CanMove = true }
                     );
@@ -1039,7 +1039,7 @@ namespace ClassicUO.Game.UI.Gumps
                         70,
                         69,
                         24,
-                        ResGumps.Damage,
+                        LocalizationManager.Get(LocalizationProperties.Damage),
                         1
                     ) { CanMove = true }
                 );
@@ -1052,7 +1052,7 @@ namespace ClassicUO.Game.UI.Gumps
                         126,
                         69,
                         24,
-                        ResGumps.Followers,
+                        LocalizationManager.Get(LocalizationProperties.Followers),
                         1
                     ) { CanMove = true }
                 );
@@ -1079,7 +1079,7 @@ namespace ClassicUO.Game.UI.Gumps
                             70,
                             55,
                             24,
-                            ResGumps.LowerReagentCost,
+                            LocalizationManager.Get(LocalizationProperties.LowerReagentCost),
                             1
                         ) { CanMove = true }
                     );
@@ -1092,7 +1092,7 @@ namespace ClassicUO.Game.UI.Gumps
                             98,
                             55,
                             24,
-                            ResGumps.SpellDamageIncrease,
+                            LocalizationManager.Get(LocalizationProperties.SpellDamageIncrease),
                             1
                         ) { CanMove = true }
                     );
@@ -1105,7 +1105,7 @@ namespace ClassicUO.Game.UI.Gumps
                             126,
                             55,
                             24,
-                            ResGumps.FasterCasting,
+                            LocalizationManager.Get(LocalizationProperties.FasterCasting),
                             1
                         ) { CanMove = true }
                     );
@@ -1118,7 +1118,7 @@ namespace ClassicUO.Game.UI.Gumps
                             154,
                             55,
                             24,
-                            ResGumps.FasterCastRecovery,
+                            LocalizationManager.Get(LocalizationProperties.FasterCastRecovery),
                             1
                         ) { CanMove = true }
                     );
@@ -1135,7 +1135,7 @@ namespace ClassicUO.Game.UI.Gumps
                             154,
                             55,
                             24,
-                            ResGumps.Gold,
+                            LocalizationManager.Get(LocalizationProperties.Gold),
                             1
                         ) { CanMove = true }
                     );
@@ -1174,7 +1174,7 @@ namespace ClassicUO.Game.UI.Gumps
                         76,
                         40,
                         14,
-                        ResGumps.PhysicalResistance,
+                        LocalizationManager.Get(LocalizationProperties.PhysicalResistance),
                         1
                     ) { CanMove = true }
                 );
@@ -1187,7 +1187,7 @@ namespace ClassicUO.Game.UI.Gumps
                         92,
                         40,
                         14,
-                        ResGumps.FireResistance,
+                        LocalizationManager.Get(LocalizationProperties.FireResistance),
                         1
                     ) { CanMove = true }
                 );
@@ -1200,7 +1200,7 @@ namespace ClassicUO.Game.UI.Gumps
                         106,
                         40,
                         14,
-                        ResGumps.ColdResistance,
+                        LocalizationManager.Get(LocalizationProperties.ColdResistance),
                         1
                     ) { CanMove = true }
                 );
@@ -1213,7 +1213,7 @@ namespace ClassicUO.Game.UI.Gumps
                         120,
                         40,
                         14,
-                        ResGumps.PoisonResistance,
+                        LocalizationManager.Get(LocalizationProperties.PoisonResistance),
                         1
                     ) { CanMove = true }
                 );
@@ -1226,7 +1226,7 @@ namespace ClassicUO.Game.UI.Gumps
                         134,
                         40,
                         14,
-                        ResGumps.EnergyResistance,
+                        LocalizationManager.Get(LocalizationProperties.EnergyResistance),
                         1
                     ) { CanMove = true }
                 );
@@ -1245,7 +1245,7 @@ namespace ClassicUO.Game.UI.Gumps
                             124,
                             34,
                             12,
-                            ResGumps.MaxStats,
+                            LocalizationManager.Get(LocalizationProperties.MaxStats),
                             1
                         ) { CanMove = true }
                     );
@@ -1264,7 +1264,7 @@ namespace ClassicUO.Game.UI.Gumps
                             131,
                             34,
                             12,
-                            ResGumps.MaxStats,
+                            LocalizationManager.Get(LocalizationProperties.MaxStats),
                             1
                         ) { CanMove = true }
                     );
@@ -1277,7 +1277,7 @@ namespace ClassicUO.Game.UI.Gumps
                             144,
                             34,
                             12,
-                            ResGumps.Followers,
+                            LocalizationManager.Get(LocalizationProperties.Followers),
                             1
                         ) { CanMove = true }
                     );
@@ -1299,7 +1299,7 @@ namespace ClassicUO.Game.UI.Gumps
                     p.Y,
                     16,
                     16,
-                    ResGumps.Minimize,
+                    LocalizationManager.Get(LocalizationProperties.Minimize),
                     1
                 ) { CanMove = true }
             );
@@ -1510,7 +1510,7 @@ namespace ClassicUO.Game.UI.Gumps
                 (
                     new Label
                     (
-                        ResGumps.Buffs,
+                        LocalizationManager.Get(LocalizationProperties.Buffs),
                         false,
                         0x0386,
                         60,

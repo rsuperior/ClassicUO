@@ -49,7 +49,7 @@ using ClassicUO.IO;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Network.Encryption;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
@@ -275,29 +275,29 @@ namespace ClassicUO.Game.Scenes
                 switch (CurrentLoginStep)
                 {
                     case LoginSteps.Connecting:
-                        labelText = ClilocLoader.Instance.GetString(3000002, ResGeneral.Connecting); // "Connecting..."
+                        labelText = ClilocLoader.Instance.GetString(3000002, LocalizationManager.Get(LocalizationProperties.Connecting)); // "Connecting..."
 
                         break;
 
                     case LoginSteps.VerifyingAccount:
-                        labelText = ClilocLoader.Instance.GetString(3000003, ResGeneral.VerifyingAccount); // "Verifying Account..."
+                        labelText = ClilocLoader.Instance.GetString(3000003, LocalizationManager.Get(LocalizationProperties.VerifyingAccount)); // "Verifying Account..."
 
                         showButtons = LoginButtons.Cancel;
 
                         break;
 
                     case LoginSteps.LoginInToServer:
-                        labelText = ClilocLoader.Instance.GetString(3000053, ResGeneral.LoggingIntoShard); // logging into shard
+                        labelText = ClilocLoader.Instance.GetString(3000053, LocalizationManager.Get(LocalizationProperties.LoggingIntoShard)); // logging into shard
 
                         break;
 
                     case LoginSteps.EnteringBritania:
-                        labelText = ClilocLoader.Instance.GetString(3000001, ResGeneral.EnteringBritannia); // Entering Britania...
+                        labelText = ClilocLoader.Instance.GetString(3000001, LocalizationManager.Get(LocalizationProperties.EnteringBritannia)); // Entering Britania...
 
                         break;
 
                     case LoginSteps.CharacterCreationDone:
-                        labelText = ResGeneral.CreatingCharacter;
+                        labelText = LocalizationManager.Get(LocalizationProperties.CreatingCharacter);
 
                         break;
                 }
@@ -345,7 +345,7 @@ namespace ClassicUO.Game.Scenes
 
             if (!await NetClient.LoginSocket.Connect(Settings.GlobalSettings.IP, Settings.GlobalSettings.Port))
             {
-                PopupMessage = ResGeneral.CheckYourConnectionAndTryAgain;
+                PopupMessage = LocalizationManager.Get(LocalizationProperties.CheckYourConnectionAndTryAgain);
                 CurrentLoginStep = LoginSteps.PopUpMessage;
                 Log.Error("No Internet Access");
             }
@@ -557,7 +557,7 @@ namespace ClassicUO.Game.Scenes
 
             Characters = null;
             DisposeAllServerEntries();
-            PopupMessage = string.Format(ResGeneral.ConnectionLost0, StringHelper.AddSpaceBeforeCapital(e.ToString()));
+            PopupMessage = string.Format(LocalizationManager.Get(LocalizationProperties.ConnectionLost0), StringHelper.AddSpaceBeforeCapital(e.ToString()));
             CurrentLoginStep = LoginSteps.PopUpMessage;
         }
 
@@ -574,13 +574,13 @@ namespace ClassicUO.Game.Scenes
                 {
                     Reconnect = true;
 
-                    PopupMessage = string.Format(ResGeneral.ReconnectPleaseWait01, _reconnectTryCounter, StringHelper.AddSpaceBeforeCapital(e.ToString()));
+                    PopupMessage = string.Format(LocalizationManager.Get(LocalizationProperties.ReconnectPleaseWait01), _reconnectTryCounter, StringHelper.AddSpaceBeforeCapital(e.ToString()));
 
                     UIManager.GetGump<LoadingGump>()?.SetText(PopupMessage);
                 }
                 else
                 {
-                    PopupMessage = string.Format(ResGeneral.ConnectionLost0, StringHelper.AddSpaceBeforeCapital(e.ToString()));
+                    PopupMessage = string.Format(LocalizationManager.Get(LocalizationProperties.ConnectionLost0), StringHelper.AddSpaceBeforeCapital(e.ToString()));
                 }
 
                 CurrentLoginStep = LoginSteps.PopUpMessage;

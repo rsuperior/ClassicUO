@@ -40,7 +40,7 @@ using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using Microsoft.Xna.Framework;
 using static ClassicUO.Network.NetClient;
@@ -285,7 +285,7 @@ namespace ClassicUO.Game
                 {
                     QuestionGump messageBox = new QuestionGump
                     (
-                        ResGeneral.ThisMayFlagYouCriminal,
+                        LocalizationManager.Get(LocalizationProperties.ThisMayFlagYouCriminal),
                         s =>
                         {
                             if (s)
@@ -803,7 +803,7 @@ namespace ClassicUO.Game
 
             if (!World.Items.Contains(bag))
             {
-                Print(ResGeneral.GrabBagNotFound);
+                Print(LocalizationManager.Get(LocalizationProperties.GrabBagNotFound));
                 ProfileManager.CurrentProfile.GrabBagSerial = 0;
                 bag = backpack.Serial;
             }

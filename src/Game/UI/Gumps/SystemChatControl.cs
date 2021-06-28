@@ -41,7 +41,7 @@ using ClassicUO.Input;
 using ClassicUO.Interfaces;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility.Collections;
 using ClassicUO.Utility.Platforms;
 using SDL2;
@@ -182,50 +182,50 @@ namespace ClassicUO.Game.UI.Gumps
                             break;
 
                         case ChatMode.Whisper:
-                            AppendChatModePrefix(ResGumps.Whisper, ProfileManager.CurrentProfile.WhisperHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Whisper), ProfileManager.CurrentProfile.WhisperHue, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.Emote:
-                            AppendChatModePrefix(ResGumps.Emote, ProfileManager.CurrentProfile.EmoteHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Emote), ProfileManager.CurrentProfile.EmoteHue, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.Yell:
-                            AppendChatModePrefix(ResGumps.Yell, ProfileManager.CurrentProfile.YellHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Yell), ProfileManager.CurrentProfile.YellHue, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.Party:
-                            AppendChatModePrefix(ResGumps.Party, ProfileManager.CurrentProfile.PartyMessageHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Party), ProfileManager.CurrentProfile.PartyMessageHue, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.Guild:
-                            AppendChatModePrefix(ResGumps.Guild, ProfileManager.CurrentProfile.GuildMessageHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Guild), ProfileManager.CurrentProfile.GuildMessageHue, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.Alliance:
-                            AppendChatModePrefix(ResGumps.Alliance, ProfileManager.CurrentProfile.AllyMessageHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Alliance), ProfileManager.CurrentProfile.AllyMessageHue, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.ClientCommand:
-                            AppendChatModePrefix(ResGumps.Command, 1161, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Command), 1161, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.UOAMChat:
                             DisposeChatModePrefix();
-                            AppendChatModePrefix(ResGumps.UOAM, 83, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.UOAM), 83, TextBoxControl.Text);
 
                             break;
 
                         case ChatMode.UOChat:
                             DisposeChatModePrefix();
 
-                            AppendChatModePrefix(ResGumps.Chat, ProfileManager.CurrentProfile.ChatMessageHue, TextBoxControl.Text);
+                            AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.Chat), ProfileManager.CurrentProfile.ChatMessageHue, TextBoxControl.Text);
 
                             break;
                     }
@@ -276,17 +276,17 @@ namespace ClassicUO.Game.UI.Gumps
                     break;
 
                 case MessageType.Party:
-                    AddLine(string.Format(ResGumps.PartyName0Text1, e.Name, e.Text), e.Font, ProfileManager.CurrentProfile.PartyMessageHue, e.IsUnicode);
+                    AddLine(string.Format(LocalizationManager.Get(LocalizationProperties.PartyName0Text1), e.Name, e.Text), e.Font, ProfileManager.CurrentProfile.PartyMessageHue, e.IsUnicode);
 
                     break;
 
                 case MessageType.Guild:
-                    AddLine(string.Format(ResGumps.GuildName0Text1, e.Name, e.Text), e.Font, ProfileManager.CurrentProfile.GuildMessageHue, e.IsUnicode);
+                    AddLine(string.Format(LocalizationManager.Get(LocalizationProperties.GuildName0Text1), e.Name, e.Text), e.Font, ProfileManager.CurrentProfile.GuildMessageHue, e.IsUnicode);
 
                     break;
 
                 case MessageType.Alliance:
-                    AddLine(string.Format(ResGumps.AllianceName0Text1, e.Name, e.Text), e.Font, ProfileManager.CurrentProfile.AllyMessageHue, e.IsUnicode);
+                    AddLine(string.Format(LocalizationManager.Get(LocalizationProperties.AllianceName0Text1), e.Name, e.Text), e.Font, ProfileManager.CurrentProfile.AllyMessageHue, e.IsUnicode);
 
                     break;
 
@@ -399,11 +399,11 @@ namespace ClassicUO.Game.UI.Gumps
                             {
                                 if (World.Party.Members[index - 1] != null && World.Party.Members[index - 1].Serial != 0)
                                 {
-                                    AppendChatModePrefix(string.Format(ResGumps.Tell0, World.Party.Members[index - 1].Name), ProfileManager.CurrentProfile.PartyMessageHue, string.Empty);
+                                    AppendChatModePrefix(string.Format(LocalizationManager.Get(LocalizationProperties.Tell0), World.Party.Members[index - 1].Name), ProfileManager.CurrentProfile.PartyMessageHue, string.Empty);
                                 }
                                 else
                                 {
-                                    AppendChatModePrefix(ResGumps.TellEmpty, ProfileManager.CurrentProfile.PartyMessageHue, string.Empty);
+                                    AppendChatModePrefix(LocalizationManager.Get(LocalizationProperties.TellEmpty), ProfileManager.CurrentProfile.PartyMessageHue, string.Empty);
                                 }
 
                                 Mode = ChatMode.Party;
@@ -625,7 +625,7 @@ namespace ClassicUO.Game.UI.Gumps
                         break;
 
                     case ChatMode.Emote:
-                        text = ResGeneral.EmoteChar + text + ResGeneral.EmoteChar;
+                        text = LocalizationManager.Get(LocalizationProperties.EmoteChar) + text + LocalizationManager.Get(LocalizationProperties.EmoteChar);
                         GameActions.Say(text, ProfileManager.CurrentProfile.EmoteHue, MessageType.Emote);
 
                         break;
@@ -649,7 +649,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     MessageManager.HandleMessage
                                     (
                                         null,
-                                        ResGumps.YouAreNotPartyLeader,
+                                        LocalizationManager.Get(LocalizationProperties.YouAreNotPartyLeader),
                                         "System",
                                         0xFFFF,
                                         MessageType.Regular,
@@ -671,7 +671,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     MessageManager.HandleMessage
                                     (
                                         null,
-                                        ResGumps.YouAreNotInAParty,
+                                        LocalizationManager.Get(LocalizationProperties.YouAreNotInAParty),
                                         "System",
                                         0xFFFF,
                                         MessageType.Regular,
@@ -690,7 +690,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     MessageManager.HandleMessage
                                     (
                                         null,
-                                        ResGumps.YouAreNotInAParty,
+                                        LocalizationManager.Get(LocalizationProperties.YouAreNotInAParty),
                                         "System",
                                         0xFFFF,
                                         MessageType.Regular,
@@ -724,7 +724,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     MessageManager.HandleMessage
                                     (
                                         null,
-                                        ResGumps.NoOneHasInvitedYouToBeInAParty,
+                                        LocalizationManager.Get(LocalizationProperties.NoOneHasInvitedYouToBeInAParty),
                                         "System",
                                         0xFFFF,
                                         MessageType.Regular,
@@ -748,7 +748,7 @@ namespace ClassicUO.Game.UI.Gumps
                                     MessageManager.HandleMessage
                                     (
                                         null,
-                                        ResGumps.NoOneHasInvitedYouToBeInAParty,
+                                        LocalizationManager.Get(LocalizationProperties.NoOneHasInvitedYouToBeInAParty),
                                         "System",
                                         0xFFFF,
                                         MessageType.Regular,
@@ -787,7 +787,7 @@ namespace ClassicUO.Game.UI.Gumps
                                 {
                                     GameActions.Print
                                     (
-                                        string.Format(ResGumps.NoteToSelf0, text),
+                                        string.Format(LocalizationManager.Get(LocalizationProperties.NoteToSelf0), text),
                                         0,
                                         MessageType.System,
                                         3,

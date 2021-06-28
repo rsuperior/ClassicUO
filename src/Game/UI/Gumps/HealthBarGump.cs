@@ -43,7 +43,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SDL2;
@@ -1390,7 +1390,7 @@ namespace ClassicUO.Game.UI.Gumps
                         }
                     );
 
-                    _name = ResGumps.Self;
+                    _name = LocalizationManager.Get(LocalizationProperties.Self);
                 }
                 else
                 {

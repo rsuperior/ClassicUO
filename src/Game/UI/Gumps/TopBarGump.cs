@@ -41,7 +41,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
 
@@ -112,9 +112,18 @@ namespace ClassicUO.Game.UI.Gumps
 
             string[] texts =
             {
-                ResGumps.Map, ResGumps.Paperdoll, ResGumps.Inventory, ResGumps.Journal, ResGumps.Chat, ResGumps.Help,
-                ResGumps.WorldMap, ResGumps.Info, ResGumps.Debug, ResGumps.NetStats, ResGumps.UOStore,
-                ResGumps.GlobalChat
+                LocalizationManager.Get(LocalizationProperties.Map),
+                LocalizationManager.Get(LocalizationProperties.Paperdoll),
+                LocalizationManager.Get(LocalizationProperties.Inventory),
+                LocalizationManager.Get(LocalizationProperties.Journal),
+                LocalizationManager.Get(LocalizationProperties.Chat), 
+                LocalizationManager.Get(LocalizationProperties.Help),
+                LocalizationManager.Get(LocalizationProperties.WorldMap), 
+                LocalizationManager.Get(LocalizationProperties.Info), 
+                LocalizationManager.Get(LocalizationProperties.Debug),
+                LocalizationManager.Get(LocalizationProperties.NetStats), 
+                LocalizationManager.Get(LocalizationProperties.UOStore),
+                LocalizationManager.Get(LocalizationProperties.GlobalChat)
             };
 
             bool hasUOStore = Client.Version >= ClientVersion.CV_706400;
@@ -212,7 +221,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
             else
             {
-                Log.Error(ResGumps.TopBarGumpAlreadyExists);
+                Log.Error(LocalizationManager.Get(LocalizationProperties.TopBarGumpAlreadyExists));
             }
         }
 
@@ -269,8 +278,8 @@ namespace ClassicUO.Game.UI.Gumps
                     break;
 
                 case Buttons.GlobalChat:
-                    Log.Warn(ResGumps.ChatButtonPushedNotImplementedYet);
-                    GameActions.Print(ResGumps.GlobalChatNotImplementedYet, 0x23, MessageType.System);
+                    Log.Warn(LocalizationManager.Get(LocalizationProperties.ChatButtonPushedNotImplementedYet));
+                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.GlobalChatNotImplementedYet), 0x23, MessageType.System);
 
                     break;
 

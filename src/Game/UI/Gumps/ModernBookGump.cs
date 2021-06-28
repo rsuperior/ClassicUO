@@ -40,7 +40,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -216,7 +216,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             _titleTextBox.SetText(title);
             _titleTextBox.TextChanged += PageZero_TextChanged;
-            Add(new Label(ResGumps.By, true, 1) { X = 40, Y = 130 }, 1);
+            Add(new Label(LocalizationManager.Get(LocalizationProperties.By), true, 1) { X = 40, Y = 130 }, 1);
 
             Add
             (

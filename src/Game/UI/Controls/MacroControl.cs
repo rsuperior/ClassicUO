@@ -38,7 +38,7 @@ using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using SDL2;
 
 namespace ClassicUO.Game.UI.Controls
@@ -71,7 +71,7 @@ namespace ClassicUO.Game.UI.Controls
                     170,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.CreateMacroButton,
+                    LocalizationManager.Get(LocalizationProperties.CreateMacroButton),
                     0,
                     TEXT_ALIGN_TYPE.TS_LEFT
                 ) { ButtonParameter = 2, IsSelectable = false }
@@ -86,7 +86,7 @@ namespace ClassicUO.Game.UI.Controls
                     50,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.Add
+                    LocalizationManager.Get(LocalizationProperties.Add)
                 ) { IsSelectable = false }
             );
 
@@ -99,7 +99,7 @@ namespace ClassicUO.Game.UI.Controls
                     50,
                     25,
                     ButtonAction.Activate,
-                    ResGumps.Remove
+                    LocalizationManager.Get(LocalizationProperties.Remove)
                 ) { ButtonParameter = 1, IsSelectable = false }
             );
 
@@ -259,7 +259,7 @@ namespace ClassicUO.Game.UI.Controls
                     }
 
                     SetupKeyByDefault();
-                    UIManager.Add(new MessageBoxGump(250, 150, string.Format(ResGumps.ThisKeyCombinationAlreadyExists, macro.Name), null));
+                    UIManager.Add(new MessageBoxGump(250, 150, string.Format(LocalizationManager.Get(LocalizationProperties.ThisKeyCombinationAlreadyExists), macro.Name), null));
 
                     return;
                 }

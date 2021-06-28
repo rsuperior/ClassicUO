@@ -40,7 +40,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
@@ -283,7 +283,7 @@ namespace ClassicUO.Game.UI.Gumps
                     }
                     else
                     {
-                        Log.Error(ResGumps.IndexOutOfbounds);
+                        Log.Error(LocalizationManager.Get(LocalizationProperties.IndexOutOfbounds));
                     }
                 }
             }
@@ -315,8 +315,8 @@ namespace ClassicUO.Game.UI.Gumps
                 Add(_image);
 
                 ContextMenu = new ContextMenuControl();
-                ContextMenu.Add(ResGumps.UseObject, Use);
-                ContextMenu.Add(ResGumps.Remove, RemoveItem);
+                ContextMenu.Add(LocalizationManager.Get(LocalizationProperties.UseObject), Use);
+                ContextMenu.Add(LocalizationManager.Get(LocalizationProperties.Remove), RemoveItem);
             }
 
             public ushort Graphic { get; private set; }

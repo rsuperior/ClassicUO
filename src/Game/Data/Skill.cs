@@ -30,7 +30,7 @@
 
 #endregion
 
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.Data
 {
@@ -72,7 +72,7 @@ namespace ClassicUO.Game.Data
 
         public override string ToString()
         {
-            return string.Format(ResGeneral.Name0Val1, Name, Value);
+            return string.Format(LocalizationManager.Get(LocalizationProperties.Name0Val1), Name, Value);
         }
     }
 }

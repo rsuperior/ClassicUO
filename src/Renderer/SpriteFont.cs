@@ -176,11 +176,8 @@ namespace ClassicUO.Renderer
             return result;
         }
 
-
-        public static SpriteFont Create(string name)
+        public static SpriteFont Create(Stream stream)
         {
-            Stream stream = typeof(SpriteFont).Assembly.GetManifestResourceStream(name);
-
             using (BinReader reader = new BinReader(stream))
             {
                 reader.ReadByte();
@@ -212,7 +209,7 @@ namespace ClassicUO.Renderer
                 int typeReaderIndex = reader.Read7BitEncodedInt();
                 reader.Read7BitEncodedInt();
 
-                SurfaceFormat format = (SurfaceFormat) reader.ReadInt32();
+                SurfaceFormat format = (SurfaceFormat)reader.ReadInt32();
                 int width = reader.ReadInt32();
                 int height = reader.ReadInt32();
                 int levelCount = reader.ReadInt32();
@@ -314,6 +311,13 @@ namespace ClassicUO.Renderer
                     defaultChar
                 );
             }
+        }
+
+        public static SpriteFont Create(string name)
+        {
+            Stream stream = typeof(SpriteFont).Assembly.GetManifestResourceStream(name);
+
+            return Create(stream);
         }
 
         private static byte[] DecompressDxt3(byte[] imageData, int width, int height)

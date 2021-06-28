@@ -37,7 +37,7 @@ using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Collections;
 using Microsoft.Xna.Framework;
@@ -835,7 +835,7 @@ namespace ClassicUO.Game.GameObjects
                             if (Z - step.Z >= 22)
                             {
                                 // oUCH!!!!
-                                AddMessage(MessageType.Label, ResGeneral.Ouch, TextType.CLIENT);
+                                AddMessage(MessageType.Label, LocalizationManager.Get(LocalizationProperties.Ouch), TextType.CLIENT);
                             }
 
                             if (World.Player.Walker.StepInfos[World.Player.Walker.CurrentWalkSequence].Accepted)

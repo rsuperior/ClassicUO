@@ -39,7 +39,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility.Logging;
 
 namespace ClassicUO.Game.Managers
@@ -60,7 +60,7 @@ namespace ClassicUO.Game.Managers
         public SkillsGroup Right { get; set; }
         public int Count;
         public bool IsMaximized;
-        public string Name = ResGeneral.NoName;
+        public string Name = LocalizationManager.Get(LocalizationProperties.NoName);
 
         public byte GetSkill(int index)
         {
@@ -198,7 +198,7 @@ namespace ClassicUO.Game.Managers
         {
             if (Groups[0] == g)
             {
-                MessageBoxGump messageBox = new MessageBoxGump(200, 125, ResGeneral.CannotDeleteThisGroup, null)
+                MessageBoxGump messageBox = new MessageBoxGump(200, 125, LocalizationManager.Get(LocalizationProperties.CannotDeleteThisGroup), null)
                 {
                     X = ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 100,
                     Y = ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y / 2 - 62
@@ -322,7 +322,7 @@ namespace ClassicUO.Game.Managers
         private static void MakeDefaultMiscellaneous()
         {
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.Miscellaneous;
+            g.Name = LocalizationManager.Get(LocalizationProperties.Miscellaneous);
             g.Add(4);
             g.Add(6);
             g.Add(10);
@@ -339,7 +339,7 @@ namespace ClassicUO.Game.Managers
             int count = SkillsLoader.Instance.SkillsCount;
 
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.Combat;
+            g.Name = LocalizationManager.Get(LocalizationProperties.Combat);
             g.Add(1);
             g.Add(31);
             g.Add(42);
@@ -382,7 +382,7 @@ namespace ClassicUO.Game.Managers
         private static void MakeDefaultTradeSkills()
         {
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.TradeSkills;
+            g.Name = LocalizationManager.Get(LocalizationProperties.TradeSkills);
             g.Add(0);
             g.Add(7);
             g.Add(8);
@@ -402,7 +402,7 @@ namespace ClassicUO.Game.Managers
             int count = SkillsLoader.Instance.SkillsCount;
 
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.Magic;
+            g.Name = LocalizationManager.Get(LocalizationProperties.Magic);
             g.Add(16);
 
             if (count > 56)
@@ -438,7 +438,7 @@ namespace ClassicUO.Game.Managers
         private static void MakeDefaultWilderness()
         {
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.Wilderness;
+            g.Name = LocalizationManager.Get(LocalizationProperties.Wilderness);
             g.Add(2);
             g.Add(35);
             g.Add(18);
@@ -452,7 +452,7 @@ namespace ClassicUO.Game.Managers
         private static void MakeDefaultThieving()
         {
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.Thieving;
+            g.Name = LocalizationManager.Get(LocalizationProperties.Thieving);
             g.Add(14);
             g.Add(21);
             g.Add(24);
@@ -468,7 +468,7 @@ namespace ClassicUO.Game.Managers
         private static void MakeDefaultBard()
         {
             SkillsGroup g = new SkillsGroup();
-            g.Name = ResGeneral.Bard;
+            g.Name = LocalizationManager.Get(LocalizationProperties.Bard);
             g.Add(15);
             g.Add(29);
             g.Add(9);
@@ -509,7 +509,7 @@ namespace ClassicUO.Game.Managers
                     StringBuilder sb = new StringBuilder(17);
 
                     SkillsGroup g = new SkillsGroup();
-                    g.Name = ResGeneral.Miscellaneous;
+                    g.Name = LocalizationManager.Get(LocalizationProperties.Miscellaneous);
 
                     SkillsGroup[] groups = new SkillsGroup[count];
                     groups[0] = g;

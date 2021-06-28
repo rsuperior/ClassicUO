@@ -41,7 +41,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 using SDL2;
 
@@ -138,7 +138,7 @@ namespace ClassicUO.Game.UI.Gumps
                 (
                     0x938,
                     0x939,
-                    ResGumps.ShowReal,
+                    LocalizationManager.Get(LocalizationProperties.ShowReal),
                     1,
                     0x0386,
                     false
@@ -151,7 +151,7 @@ namespace ClassicUO.Game.UI.Gumps
                 (
                     0x938,
                     0x939,
-                    ResGumps.ShowCaps,
+                    LocalizationManager.Get(LocalizationProperties.ShowCaps),
                     1,
                     0x0386,
                     false
@@ -165,7 +165,7 @@ namespace ClassicUO.Game.UI.Gumps
             LoadSkills();
 
             Add(_resetGroups = new NiceButton(_scrollArea.X + 25, _scrollArea.Y + 7, 100, 18,
-                                              ButtonAction.Activate, ResGumps.ResetGroups,
+                                              ButtonAction.Activate, LocalizationManager.Get(LocalizationProperties.ResetGroups),
                                               unicode: false,
                                               font: 6)
             {
@@ -242,7 +242,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 SkillsGroup g = new SkillsGroup
                 {
-                    Name = ResGumps.NewGroup
+                    Name = LocalizationManager.Get(LocalizationProperties.NewGroup)
                 };
 
                 SkillsGroupManager.Add(g);
@@ -648,7 +648,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    text = ResGumps.NoName;
+                    text = LocalizationManager.Get(LocalizationProperties.NoName);
                     _textbox.SetText(text);
                 }
 

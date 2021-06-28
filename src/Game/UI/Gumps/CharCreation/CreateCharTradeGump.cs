@@ -39,7 +39,7 @@ using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps.CharCreation
 {
@@ -306,7 +306,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
             }
             else
             {
-                UIManager.GetGump<CharCreationGump>()?.ShowMessage(Client.Version <= ClientVersion.CV_5090 ? ResGumps.YouMustHaveThreeUniqueSkillsChosen : ClilocLoader.Instance.GetString(1080032));
+                UIManager.GetGump<CharCreationGump>()?.ShowMessage(Client.Version <= ClientVersion.CV_5090 ? LocalizationManager.Get(LocalizationProperties.YouMustHaveThreeUniqueSkillsChosen) : ClilocLoader.Instance.GetString(1080032));
 
                 return false;
             }

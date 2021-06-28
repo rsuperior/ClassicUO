@@ -35,7 +35,7 @@ using ClassicUO.Game.Managers;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -76,7 +76,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
-                new Label(ResGumps.Tell, false, 0x0386, font: 1)
+                new Label(LocalizationManager.Get(LocalizationProperties.Tell), false, 0x0386, font: 1)
                 {
                     X = 40,
                     Y = 30
@@ -85,7 +85,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
-                new Label(ResGumps.Kick, false, 0x0386, font: 1)
+                new Label(LocalizationManager.Get(LocalizationProperties.Kick), false, 0x0386, font: 1)
                 {
                     X = 80,
                     Y = 30
@@ -94,7 +94,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
-                new Label(ResGumps.PartyManifest, false, 0x0386, font: 2)
+                new Label(LocalizationManager.Get(LocalizationProperties.PartyManifest), false, 0x0386, font: 2)
                 {
                     X = 153,
                     Y = 20
@@ -172,7 +172,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
-                new Label(ResGumps.SendThePartyAMessage, false, 0x0386, font: 2)
+                new Label(LocalizationManager.Get(LocalizationProperties.SendThePartyAMessage), false, 0x0386, font: 2)
                 {
                     X = 110,
                     Y = 307
@@ -193,7 +193,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 Add
                 (
-                    new Label(ResGumps.PartyCanLootMe, false, 0x0386, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.PartyCanLootMe), false, 0x0386, font: 2)
                     {
                         X = 110,
                         Y = 334
@@ -214,7 +214,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 Add
                 (
-                    new Label(ResGumps.PartyCannotLootMe, false, 0x0386, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.PartyCannotLootMe), false, 0x0386, font: 2)
                     {
                         X = 110,
                         Y = 334
@@ -237,7 +237,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 Add
                 (
-                    new Label(ResGumps.LeaveTheParty, false, 0x0386, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.LeaveTheParty), false, 0x0386, font: 2)
                     {
                         X = 110,
                         Y = 360
@@ -248,7 +248,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 Add
                 (
-                    new Label(ResGumps.DisbandTheParty, false, 0x0386, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.DisbandTheParty), false, 0x0386, font: 2)
                     {
                         X = 110,
                         Y = 360
@@ -270,7 +270,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                 Add
                 (
-                    new Label(ResGumps.AddNewMember, false, 0x0386, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.AddNewMember), false, 0x0386, font: 2)
                     {
                         X = 110,
                         Y = 385
@@ -324,7 +324,7 @@ namespace ClassicUO.Game.UI.Gumps
                     {
                         GameActions.Print
                         (
-                            ResGumps.YouAreNotInAParty,
+                            LocalizationManager.Get(LocalizationProperties.YouAreNotInAParty),
                             0,
                             MessageType.System,
                             3,
@@ -349,7 +349,7 @@ namespace ClassicUO.Game.UI.Gumps
                     {
                         GameActions.Print
                         (
-                            ResGumps.YouAreNotInAParty,
+                            LocalizationManager.Get(LocalizationProperties.YouAreNotInAParty),
                             0,
                             MessageType.System,
                             3,
@@ -388,7 +388,7 @@ namespace ClassicUO.Game.UI.Gumps
                         {
                             GameActions.Print
                             (
-                                ResGumps.ThereIsNoOneInThatPartySlot,
+                                LocalizationManager.Get(LocalizationProperties.ThereIsNoOneInThatPartySlot),
                                 0,
                                 MessageType.System,
                                 3,
@@ -410,7 +410,7 @@ namespace ClassicUO.Game.UI.Gumps
                         {
                             GameActions.Print
                             (
-                                ResGumps.ThereIsNoOneInThatPartySlot,
+                                LocalizationManager.Get(LocalizationProperties.ThereIsNoOneInThatPartySlot),
                                 0,
                                 MessageType.System,
                                 3,

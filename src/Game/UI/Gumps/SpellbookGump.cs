@@ -43,7 +43,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -331,7 +331,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     if (page == 1 && _spellBookType == SpellBookType.Chivalry)
                     {
-                        Label label = new Label(ResGumps.TithingPointsAvailable + World.Player.TithingPoints, false, 0x0288, font: 6)
+                        Label label = new Label(LocalizationManager.Get(LocalizationProperties.TithingPointsAvailable) + World.Player.TithingPoints, false, 0x0288, font: 6)
                         {
                             X = 62, Y = 162
                         };
@@ -350,7 +350,7 @@ namespace ClassicUO.Game.UI.Gumps
                         dataX = 225;
                     }
 
-                    Label text = new Label(ResGumps.Index, false, 0x0288, font: 6)
+                    Label text = new Label(LocalizationManager.Get(LocalizationProperties.Index), false, 0x0288, font: 6)
                     {
                         X = indexX, Y = 10
                     };
@@ -359,7 +359,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                     if (_spellBookType == SpellBookType.Mastery && j >= 1)
                     {
-                        text = new Label(ResGumps.Abilities, false, 0x0288, font: 6)
+                        text = new Label(LocalizationManager.Get(LocalizationProperties.Abilities), false, 0x0288, font: 6)
                         {
                             X = dataX,
                             Y = 30
@@ -455,7 +455,7 @@ namespace ClassicUO.Game.UI.Gumps
                     }
                     else if (_spellBookType == SpellBookType.Mastery)
                     {
-                        text = new Label(page == pagesToFill ? ResGumps.Passive : ResGumps.Activated, false, 0x0288, font: 6)
+                        text = new Label(page == pagesToFill ? LocalizationManager.Get(LocalizationProperties.Passive) : LocalizationManager.Get(LocalizationProperties.Activated), false, 0x0288, font: 6)
                         {
                             X = dataX,
                             Y = 30
@@ -787,7 +787,7 @@ namespace ClassicUO.Game.UI.Gumps
                         );
                     }
 
-                    Label text = new Label(ResGumps.Reagents, false, 0x0288, font: 6)
+                    Label text = new Label(LocalizationManager.Get(LocalizationProperties.Reagents), false, 0x0288, font: 6)
                     {
                         X = iconX, Y = 92
                     };
@@ -1211,17 +1211,17 @@ namespace ClassicUO.Game.UI.Gumps
                     if (def.TithingCost > 0)
                     {
                         y = 148;
-                        text = string.Format(ResGumps.Upkeep0Mana1MinSkill2, def.TithingCost, manaCost, minSkill);
+                        text = string.Format(LocalizationManager.Get(LocalizationProperties.Upkeep0Mana1MinSkill2), def.TithingCost, manaCost, minSkill);
                     }
                     else
                     {
-                        text = string.Format(ResGumps.ManaCost0MinSkill1, manaCost, minSkill);
+                        text = string.Format(LocalizationManager.Get(LocalizationProperties.ManaCost0MinSkill1), manaCost, minSkill);
                     }
 
                     return;
             }
 
-            text = string.Format(ResGumps.ManaCost0MinSkill1, manaCost, minSkill);
+            text = string.Format(LocalizationManager.Get(LocalizationProperties.ManaCost0MinSkill1), manaCost, minSkill);
         }
 
         private void SetActivePage(int page)

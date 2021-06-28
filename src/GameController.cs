@@ -45,7 +45,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using Microsoft.Xna.Framework;
@@ -872,7 +872,7 @@ namespace ClassicUO
             {
                 texture.SetData(colors);
                 texture.SaveAsPng(fileStream, texture.Width, texture.Height);
-                string message = string.Format(ResGeneral.ScreenshotStoredIn0, path);
+                string message = string.Format(LocalizationManager.Get(LocalizationProperties.ScreenshotStoredIn0), path);
 
                 if (ProfileManager.CurrentProfile == null || ProfileManager.CurrentProfile.HideScreenshotStoredInMessage)
                 {

@@ -39,7 +39,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -89,7 +89,7 @@ namespace ClassicUO.Game.UI.Gumps
                         0,
                         World.Player.Name,
                         string.Empty,
-                        ResGumps.DateTime,
+                        LocalizationManager.Get(LocalizationProperties.DateTime),
                         string.Empty,
                         0
                     ) { X = 400, Y = 335 }
@@ -231,7 +231,7 @@ namespace ClassicUO.Game.UI.Gumps
                 textColor = 0;
             }
 
-            Label text = new Label(ResGumps.Author, useUnicode, textColor, font: useUnicode ? unicodeFontIndex : (byte) 6)
+            Label text = new Label(LocalizationManager.Get(LocalizationProperties.Author), useUnicode, textColor, font: useUnicode ? unicodeFontIndex : (byte) 6)
             {
                 X = 30,
                 Y = 40
@@ -248,7 +248,7 @@ namespace ClassicUO.Game.UI.Gumps
             Add(text);
 
 
-            text = new Label(ResGumps.Date, useUnicode, textColor, font: useUnicode ? unicodeFontIndex : (byte) 6)
+            text = new Label(LocalizationManager.Get(LocalizationProperties.Date), useUnicode, textColor, font: useUnicode ? unicodeFontIndex : (byte) 6)
             {
                 X = 30,
                 Y = 58
@@ -264,7 +264,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add(text);
 
-            text = new Label(ResGumps.Title, useUnicode, textColor, font: useUnicode ? unicodeFontIndex : (byte) 6)
+            text = new Label(LocalizationManager.Get(LocalizationProperties.Title), useUnicode, textColor, font: useUnicode ? unicodeFontIndex : (byte) 6)
             {
                 X = 30,
                 Y = 77
@@ -461,7 +461,7 @@ namespace ClassicUO.Game.UI.Gumps
                             LocalSerial,
                             _msgSerial,
                             World.Player.Name,
-                            ResGumps.RE + _subjectTextbox.Text,
+                            LocalizationManager.Get(LocalizationProperties.RE) + _subjectTextbox.Text,
                             _datatime,
                             string.Empty,
                             0

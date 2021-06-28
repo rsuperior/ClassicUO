@@ -38,7 +38,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using Microsoft.Xna.Framework;
 using SDL2;
@@ -122,7 +122,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
                 Add
                 (
-                    new Label(ResGumps.LoginToUO, false, HUE, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.LoginToUO), false, HUE, font: 2)
                     {
                         X = 253,
                         Y = 305
@@ -131,7 +131,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
                 Add
                 (
-                    new Label(ResGumps.Account, false, HUE, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.Account), false, HUE, font: 2)
                     {
                         X = 183,
                         Y = 345
@@ -140,7 +140,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
                 Add
                 (
-                    new Label(ResGumps.Password, false, HUE, font: 2)
+                    new Label(LocalizationManager.Get(LocalizationProperties.Password), false, HUE, font: 2)
                     {
                         X = 183,
                         Y = 385
@@ -174,7 +174,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
                 Add
                 (
-                    new Label(string.Format(ResGumps.CUOVersion0, CUOEnviroment.Version), false, 0x034E, font: 9)
+                    new Label(string.Format(LocalizationManager.Get(LocalizationProperties.CUOVersion0), CUOEnviroment.Version), false, 0x034E, font: 9)
                     {
                         X = 286,
                         Y = 465
@@ -188,7 +188,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                     (
                         0x00D2,
                         0x00D3,
-                        ResGumps.Autologin,
+                        LocalizationManager.Get(LocalizationProperties.Autologin),
                         1,
                         0x0386,
                         false
@@ -205,7 +205,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                     (
                         0x00D2,
                         0x00D3,
-                        ResGumps.SaveAccount,
+                        LocalizationManager.Get(LocalizationProperties.SaveAccount),
                         1,
                         0x0386,
                         false
@@ -275,7 +275,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
 
                 Add
                 (
-                    new Label(string.Format(ResGumps.CUOVersion0, CUOEnviroment.Version), false, 0x0481, font: 9)
+                    new Label(string.Format(LocalizationManager.Get(LocalizationProperties.CUOVersion0), CUOEnviroment.Version), false, 0x0481, font: 9)
                     {
                         X = 286,
                         Y = 465
@@ -289,7 +289,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                     (
                         0x00D2,
                         0x00D3,
-                        ResGumps.Autologin,
+                        LocalizationManager.Get(LocalizationProperties.Autologin),
                         9,
                         0x0481,
                         false
@@ -306,7 +306,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                     (
                         0x00D2,
                         0x00D3,
-                        ResGumps.SaveAccount,
+                        LocalizationManager.Get(LocalizationProperties.SaveAccount),
                         9,
                         0x0481,
                         false

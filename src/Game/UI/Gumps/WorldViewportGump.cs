@@ -39,7 +39,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -97,7 +97,7 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             };
 
-            _button.SetTooltip(ResGumps.ResizeGameWindow);
+            _button.SetTooltip(LocalizationManager.Get(LocalizationProperties.ResizeGameWindow));
             Width = _worldWidth + BORDER_WIDTH * 2;
             Height = _worldHeight + BORDER_WIDTH * 2;
 

@@ -43,7 +43,7 @@ using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Logging;
 using SDL2;
@@ -158,7 +158,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Paperdoll,
+                    LocalizationManager.Get(LocalizationProperties.Paperdoll),
                     (SDL.SDL_Keycode) 112,
                     true,
                     false,
@@ -176,7 +176,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Options,
+                    LocalizationManager.Get(LocalizationProperties.Options),
                     (SDL.SDL_Keycode) 111,
                     true,
                     false,
@@ -194,7 +194,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Journal,
+                    LocalizationManager.Get(LocalizationProperties.Journal),
                     (SDL.SDL_Keycode) 106,
                     true,
                     false,
@@ -212,7 +212,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Backpack,
+                    LocalizationManager.Get(LocalizationProperties.Backpack),
                     (SDL.SDL_Keycode) 105,
                     true,
                     false,
@@ -230,7 +230,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Radar,
+                    LocalizationManager.Get(LocalizationProperties.Radar),
                     (SDL.SDL_Keycode) 114,
                     true,
                     false,
@@ -248,7 +248,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Bow,
+                    LocalizationManager.Get(LocalizationProperties.Bow),
                     (SDL.SDL_Keycode) 98,
                     false,
                     true,
@@ -266,7 +266,7 @@ namespace ClassicUO.Game.Managers
             (
                 new Macro
                 (
-                    ResGeneral.Salute,
+                    LocalizationManager.Get(LocalizationProperties.Salute),
                     (SDL.SDL_Keycode) 115,
                     false,
                     true,
@@ -418,7 +418,7 @@ namespace ClassicUO.Game.Managers
                         switch (macro.Code)
                         {
                             case MacroType.Emote:
-                                text = ResGeneral.EmoteChar + text + ResGeneral.EmoteChar;
+                                text = LocalizationManager.Get(LocalizationProperties.EmoteChar) + text + LocalizationManager.Get(LocalizationProperties.EmoteChar);
                                 type = MessageType.Emote;
                                 hue = ProfileManager.CurrentProfile.EmoteHue;
 
@@ -1163,7 +1163,7 @@ namespace ClassicUO.Game.Managers
                 case MacroType.AlwaysRun:
                     ProfileManager.CurrentProfile.AlwaysRun = !ProfileManager.CurrentProfile.AlwaysRun;
 
-                    GameActions.Print(ProfileManager.CurrentProfile.AlwaysRun ? ResGeneral.AlwaysRunIsNowOn : ResGeneral.AlwaysRunIsNowOff);
+                    GameActions.Print(ProfileManager.CurrentProfile.AlwaysRun ? LocalizationManager.Get(LocalizationProperties.AlwaysRunIsNowOn) : LocalizationManager.Get(LocalizationProperties.AlwaysRunIsNowOff));
 
                     break;
 
@@ -1232,7 +1232,7 @@ namespace ClassicUO.Game.Managers
 
                 case MacroType.TargetSystemOnOff:
 
-                    GameActions.Print(ResGeneral.TargetSystemNotImplemented);
+                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.TargetSystemNotImplemented));
 
                     break;
 
@@ -1319,7 +1319,7 @@ namespace ClassicUO.Game.Managers
 
                         World.ClientViewRange = res;
 
-                        GameActions.Print(string.Format(ResGeneral.ClientViewRangeIsNow0, res));
+                        GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.ClientViewRangeIsNow0), res));
                     }
 
                     break;
@@ -1332,7 +1332,7 @@ namespace ClassicUO.Game.Managers
                         World.ClientViewRange = Constants.MAX_VIEW_RANGE;
                     }
 
-                    GameActions.Print(string.Format(ResGeneral.ClientViewRangeIsNow0, World.ClientViewRange));
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.ClientViewRangeIsNow0), World.ClientViewRange));
 
                     break;
 
@@ -1344,25 +1344,25 @@ namespace ClassicUO.Game.Managers
                         World.ClientViewRange = Constants.MIN_VIEW_RANGE;
                     }
 
-                    GameActions.Print(string.Format(ResGeneral.ClientViewRangeIsNow0, World.ClientViewRange));
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.ClientViewRangeIsNow0)), World.ClientViewRange);
 
                     break;
 
                 case MacroType.MaxUpdateRange:
                     World.ClientViewRange = Constants.MAX_VIEW_RANGE;
-                    GameActions.Print(string.Format(ResGeneral.ClientViewRangeIsNow0, World.ClientViewRange));
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.ClientViewRangeIsNow0)), World.ClientViewRange);
 
                     break;
 
                 case MacroType.MinUpdateRange:
                     World.ClientViewRange = Constants.MIN_VIEW_RANGE;
-                    GameActions.Print(string.Format(ResGeneral.ClientViewRangeIsNow0, World.ClientViewRange));
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.ClientViewRangeIsNow0), World.ClientViewRange));
 
                     break;
 
                 case MacroType.DefaultUpdateRange:
                     World.ClientViewRange = Constants.MAX_VIEW_RANGE;
-                    GameActions.Print(string.Format(ResGeneral.ClientViewRangeIsNow0, World.ClientViewRange));
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.ClientViewRangeIsNow0), World.ClientViewRange));
 
                     break;
 
@@ -1480,13 +1480,13 @@ namespace ClassicUO.Game.Managers
                     break;
 
                 case MacroType.Grab:
-                    GameActions.Print(ResGeneral.TargetAnItemToGrabIt);
+                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.TargetAnItemToGrabIt));
                     TargetManager.SetTargeting(CursorTarget.Grab, 0, TargetType.Neutral);
 
                     break;
 
                 case MacroType.SetGrabBag:
-                    GameActions.Print(ResGumps.TargetContainerToGrabItemsInto);
+                    GameActions.Print(LocalizationManager.Get(LocalizationProperties.TargetContainerToGrabItemsInto));
                     TargetManager.SetTargeting(CursorTarget.SetGrabBag, 0, TargetType.Neutral);
 
                     break;
@@ -1562,7 +1562,7 @@ namespace ClassicUO.Game.Managers
                 {
                     if (ent != null)
                     {
-                        GameActions.MessageOverhead(string.Format(ResGeneral.Target0, ent.Name), Notoriety.GetHue(((Mobile) ent).NotorietyFlag), World.Player);
+                        GameActions.MessageOverhead(string.Format(LocalizationManager.Get(LocalizationProperties.Target0), ent.Name), Notoriety.GetHue(((Mobile) ent).NotorietyFlag), World.Player);
 
                         TargetManager.SelectedTarget = serial;
                         TargetManager.LastTargetInfo.SetEntity(serial);
@@ -1574,7 +1574,7 @@ namespace ClassicUO.Game.Managers
                 {
                     if (ent != null)
                     {
-                        GameActions.MessageOverhead(string.Format(ResGeneral.Target0, ent.Name), 992, World.Player);
+                        GameActions.MessageOverhead(string.Format(LocalizationManager.Get(LocalizationProperties.Target0), ent.Name), 992, World.Player);
                         TargetManager.SelectedTarget = serial;
                         TargetManager.LastTargetInfo.SetEntity(serial);
 
@@ -1583,7 +1583,7 @@ namespace ClassicUO.Game.Managers
                 }
             }
 
-            GameActions.Print(ResGeneral.EntityNotFound);
+            GameActions.Print(LocalizationManager.Get(LocalizationProperties.EntityNotFound));
         }
     }
 

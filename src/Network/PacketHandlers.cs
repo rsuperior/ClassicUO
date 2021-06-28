@@ -45,7 +45,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using ClassicUO.Utility;
 using ClassicUO.Utility.Collections;
 using ClassicUO.Utility.Logging;
@@ -440,7 +440,7 @@ namespace ClassicUO.Network
                             {
                                 GameActions.Print
                                 (
-                                    string.Format(ResGeneral.Your0HasChangedBy1ItIsNow2, ResGeneral.Strength, deltaStr, str),
+                                    string.Format(LocalizationManager.Get(LocalizationProperties.Your0HasChangedBy1ItIsNow2), LocalizationManager.Get(LocalizationProperties.Strength), deltaStr, str),
                                     0x0170,
                                     MessageType.System,
                                     3,
@@ -452,7 +452,7 @@ namespace ClassicUO.Network
                             {
                                 GameActions.Print
                                 (
-                                    string.Format(ResGeneral.Your0HasChangedBy1ItIsNow2, ResGeneral.Dexterity, deltaDex, dex),
+                                    string.Format(LocalizationManager.Get(LocalizationProperties.Your0HasChangedBy1ItIsNow2), LocalizationManager.Get(LocalizationProperties.Dexterity), deltaDex, dex),
                                     0x0170,
                                     MessageType.System,
                                     3,
@@ -464,7 +464,7 @@ namespace ClassicUO.Network
                             {
                                 GameActions.Print
                                 (
-                                    string.Format(ResGeneral.Your0HasChangedBy1ItIsNow2, ResGeneral.Intelligence, deltaInt, intell),
+                                    string.Format(LocalizationManager.Get(LocalizationProperties.Your0HasChangedBy1ItIsNow2), LocalizationManager.Get(LocalizationProperties.Intelligence), deltaInt, intell),
                                     0x0170,
                                     MessageType.System,
                                     3,
@@ -1876,11 +1876,11 @@ namespace ClassicUO.Network
                                     (
                                         string.Format
                                         (
-                                            ResGeneral.YourSkillIn0Has1By2ItIsNow3,
+                                            LocalizationManager.Get(LocalizationProperties.YourSkillIn0Has1By2ItIsNow3),
                                             skill.Name,
-                                            change < 0 ? ResGeneral.Decreased : ResGeneral.Increased,
-                                            Math.Abs(change),
-                                            skill.Value + change
+                                            change < 0 ? LocalizationManager.Get(LocalizationProperties.Decreased) : LocalizationManager.Get(LocalizationProperties.Increased),
+                                                                                                                                             Math.Abs(change),
+                                                                                                                                             skill.Value + change
                                         ),
                                         0x58,
                                         MessageType.System,
@@ -2167,7 +2167,7 @@ namespace ClassicUO.Network
                         {
                             GameActions.Print
                             (
-                                ResGeneral.ItBeginsToRain,
+                                LocalizationManager.Get(LocalizationProperties.ItBeginsToRain),
                                 1154,
                                 MessageType.System,
                                 3,
@@ -2184,7 +2184,7 @@ namespace ClassicUO.Network
                         {
                             GameActions.Print
                             (
-                                ResGeneral.AFierceStormApproaches,
+                                LocalizationManager.Get(LocalizationProperties.AFierceStormApproaches),
                                 1154,
                                 MessageType.System,
                                 3,
@@ -2201,7 +2201,7 @@ namespace ClassicUO.Network
                         {
                             GameActions.Print
                             (
-                                ResGeneral.ItBeginsToSnow,
+                                LocalizationManager.Get(LocalizationProperties.ItBeginsToSnow),
                                 1154,
                                 MessageType.System,
                                 3,
@@ -2218,7 +2218,7 @@ namespace ClassicUO.Network
                         {
                             GameActions.Print
                             (
-                                ResGeneral.AStormIsBrewing,
+                                LocalizationManager.Get(LocalizationProperties.AStormIsBrewing),
                                 1154,
                                 MessageType.System,
                                 3,
@@ -3829,7 +3829,7 @@ namespace ClassicUO.Network
 
                     UIManager.GetGump<ChatGump>()?.UpdateConference();
 
-                    GameActions.Print(string.Format(ResGeneral.YouHaveJoinedThe0Channel, channelName), ProfileManager.CurrentProfile.ChatMessageHue, MessageType.Regular, 1);
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.YouHaveJoinedThe0Channel), channelName), ProfileManager.CurrentProfile.ChatMessageHue, MessageType.Regular, 1);
 
                     break;
 
@@ -3837,7 +3837,7 @@ namespace ClassicUO.Network
                     p.Skip(4);
                     channelName = p.ReadUnicodeBE();
 
-                    GameActions.Print(string.Format(ResGeneral.YouHaveLeftThe0Channel, channelName), ProfileManager.CurrentProfile.ChatMessageHue, MessageType.Regular, 1);
+                    GameActions.Print(string.Format(LocalizationManager.Get(LocalizationProperties.YouHaveLeftThe0Channel), channelName), ProfileManager.CurrentProfile.ChatMessageHue, MessageType.Regular, 1);
 
                     break;
 
@@ -4179,7 +4179,7 @@ namespace ClassicUO.Network
 
                         if (crafterNameLen > 0)
                         {
-                            strBuffer.Append(ResGeneral.CraftedBy);
+                            strBuffer.Append(LocalizationManager.Get(LocalizationProperties.CraftedBy));
                             strBuffer.Append(p.ReadASCII(crafterNameLen));
                         }
                     }

@@ -34,7 +34,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -57,7 +57,7 @@ namespace ClassicUO.Game.UI.Gumps
                 Alpha = 0.2f
             };
 
-            Label text = new Label(string.Format(ResGumps.P0HasInvitedYouToParty, mobile == null || string.IsNullOrEmpty(mobile.Name) ? ResGumps.NoName : mobile.Name), true, 15)
+            Label text = new Label(string.Format(LocalizationManager.Get(LocalizationProperties.P0HasInvitedYouToParty), mobile == null || string.IsNullOrEmpty(mobile.Name) ? LocalizationManager.Get(LocalizationProperties.NoName) : mobile.Name), true, 15)
             {
                 X = ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 115,
                 Y = 165
@@ -70,7 +70,7 @@ namespace ClassicUO.Game.UI.Gumps
                 45,
                 25,
                 ButtonAction.Activate,
-                ResGumps.Accept
+                LocalizationManager.Get(LocalizationProperties.Accept)
             );
 
             NiceButton declineButton = new NiceButton
@@ -80,7 +80,7 @@ namespace ClassicUO.Game.UI.Gumps
                 45,
                 25,
                 ButtonAction.Activate,
-                ResGumps.Decline
+                LocalizationManager.Get(LocalizationProperties.Decline)
             );
 
             Add(partyGumpBackground);

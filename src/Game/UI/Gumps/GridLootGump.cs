@@ -38,7 +38,7 @@ using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using Microsoft.Xna.Framework;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -102,7 +102,7 @@ namespace ClassicUO.Game.UI.Gumps
                 100,
                 20,
                 ButtonAction.Activate,
-                ResGumps.SetLootBag
+                LocalizationManager.Get(LocalizationProperties.SetLootBag)
             ) { ButtonParameter = 2, IsSelectable = false };
 
             Add(_setlootbag);
@@ -114,7 +114,7 @@ namespace ClassicUO.Game.UI.Gumps
                 40,
                 20,
                 ButtonAction.Activate,
-                ResGumps.Prev
+                LocalizationManager.Get(LocalizationProperties.Prev)
             ) { ButtonParameter = 0, IsSelectable = false };
 
             _buttonNext = new NiceButton
@@ -124,7 +124,7 @@ namespace ClassicUO.Game.UI.Gumps
                 40,
                 20,
                 ButtonAction.Activate,
-                ResGumps.Next
+                LocalizationManager.Get(LocalizationProperties.Next)
             ) { ButtonParameter = 1, IsSelectable = false };
 
             _buttonNext.IsVisible = _buttonPrev.IsVisible = false;
@@ -181,7 +181,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
             else if (buttonID == 2)
             {
-                GameActions.Print(ResGumps.TargetContainerToGrabItemsInto);
+                GameActions.Print(LocalizationManager.Get(LocalizationProperties.TargetContainerToGrabItemsInto));
                 TargetManager.SetTargeting(CursorTarget.SetGrabBag, 0, TargetType.Neutral);
             }
             else
@@ -276,7 +276,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (count == 0)
             {
-                GameActions.Print(ResGumps.CorpseIsEmpty);
+                GameActions.Print(LocalizationManager.Get(LocalizationProperties.CorpseIsEmpty));
                 Dispose();
             }
             else if (_hideIfEmpty && !IsVisible)

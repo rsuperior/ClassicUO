@@ -37,7 +37,7 @@ using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.IO;
 using ClassicUO.Network;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.Managers
 {
@@ -265,7 +265,7 @@ namespace ClassicUO.Game.Managers
 
                     if (string.IsNullOrEmpty(_name))
                     {
-                        _name = ResGeneral.NotSeeing;
+                        _name = LocalizationManager.Get(LocalizationProperties.NotSeeing);
                     }
                 }
 

@@ -33,7 +33,7 @@
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Network;
 using ClassicUO.Renderer;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -77,7 +77,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             Label text = new Label
             (
-                ResGumps.ChooseName,
+                LocalizationManager.Get(LocalizationProperties.ChooseName),
                 true,
                 23,
                 Width - 17,
@@ -105,7 +105,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             text = new Label
             (
-                ResGumps.Name,
+                LocalizationManager.Get(LocalizationProperties.Name),
                 true,
                 0x033,
                 0,

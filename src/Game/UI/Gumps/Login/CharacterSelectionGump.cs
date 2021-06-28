@@ -39,7 +39,7 @@ using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
-using ClassicUO.Resources;
+using ClassicUO.Localization;
 using SDL2;
 
 namespace ClassicUO.Game.UI.Gumps.Login
@@ -259,7 +259,7 @@ namespace ClassicUO.Game.UI.Gumps.Login
                 (
                     new LoadingGump
                     (
-                        string.Format(ResGumps.PermanentlyDelete0, charName),
+                        string.Format(LocalizationManager.Get(LocalizationProperties.PermanentlyDelete0), charName),
                         LoginButtons.OK | LoginButtons.Cancel,
                         buttonID =>
                         {
