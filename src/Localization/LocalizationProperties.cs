@@ -54,6 +54,8 @@ namespace ClassicUO.Localization
         HasMadeYouAConferenceModerator,
         HasRemovedYouFromModerators,
         Hits,
+        IgnoreAllianceMessages,
+        IgnoreGuildMessages,
         Increased,
         Intelligence,
         Invariant,

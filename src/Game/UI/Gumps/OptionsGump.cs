@@ -14587,7 +14587,7 @@ namespace ClassicUO.Game.UI.Gumps
             _ignoreGuildMessages = AddCheckBox
             (
                 rightArea,
-                ResGumps.IgnoreGuildMessages,
+                LocalizationManager.Get(LocalizationProperties.IgnoreGuildMessages),
                 _currentProfile.IgnoreGuildMessages,
                 startX,
                 startY
@@ -14598,7 +14598,7 @@ namespace ClassicUO.Game.UI.Gumps
             _ignoreAllianceMessages = AddCheckBox
             (
                 rightArea,
-                ResGumps.IgnoreAllianceMessages,
+                LocalizationManager.Get(LocalizationProperties.IgnoreAllianceMessages),
                 _currentProfile.IgnoreAllianceMessages,
                 startX,
                 startY
