@@ -149,6 +149,110 @@ namespace ClassicUO.Game.UI.Gumps
             databox.WantUpdateSize = true;
             scrollArea.Add(databox);
 
+            Dictionary<string, string> dict = GetGameObjectProperties(obj);
+
+            if (dict != null)
+            {
+                int startX = 5;
+                int startY = 5;
+
+                foreach (KeyValuePair<string, string> item in dict.OrderBy(s => s.Key))
+                {
+                    Label label = new Label
+                    (
+                        item.Key + ":",
+                        true,
+                        33,
+                        font: 1,
+                        style: FontStyle.BlackBorder
+                    )
+                    {
+                        X = startX,
+                        Y = startY
+                    };
+
+                    databox.Add(label);
+
+                    int height = label.Height;
+
+                    label = new Label
+                    (
+                        item.Value,
+                        true,
+                        1153,
+                        font: 1,
+                        style: FontStyle.BlackBorder,
+                        maxwidth: WIDTH - 65 - 200
+                    )
+                    {
+                        X = startX + 200,
+                        Y = startY,
+                        AcceptMouseInput = true
+                    };
+
+                    label.MouseUp += OnLabelClick;
+
+                    if (label.Height > 0)
+                    {
+                        height = label.Height;
+                    }
+
+                    databox.Add(label);
+
+                    databox.Add
+                    (
+                        new Line
+                        (
+                            startX,
+                            startY + height + 2,
+                            WIDTH - 65,
+                            1,
+                            Color.Gray.PackedValue
+                        )
+                    );
+
+                    startY += height + 4;
+                }
+            }
+
+            databox.ReArrangeChildren();
+        }
+
+        public override void OnButtonClick(int buttonID)
+        {
+            if (buttonID == 0) // dump
+            {
+                Dictionary<string, string> dict = GetGameObjectProperties(_obj);
+
+                using (LogFile writer = new LogFile(CUOEnviroment.ExecutablePath, "dump_gameobject.txt"))
+                {
+                    writer.Write("###################################################");
+                    writer.Write($"CUO version: {CUOEnviroment.Version}");
+                    writer.Write($"OBJECT TYPE: {_obj.GetType()}");
+
+                    foreach (KeyValuePair<string, string> item in dict.OrderBy(s => s.Key))
+                    {
+                        writer.Write($"{item.Key} = {item.Value}");
+                    }
+
+                    writer.Write("###################################################");
+                    writer.Write("");
+                }
+            }
+        }
+
+        private static void OnLabelClick(object sender, EventArgs e)
+        {
+            Label l = (Label) sender;
+
+            if (l != null)
+            {
+                SDL.SDL_SetClipboardText(l.Text);
+            }
+        }
+
+        private Dictionary<string, string> GetGameObjectProperties(GameObject obj)
+        {
             Dictionary<string, string> dict = new Dictionary<string, string>();
 
             dict["Graphics"] = $"0x{obj.Graphic:X4}";
@@ -224,108 +328,7 @@ namespace ClassicUO.Game.UI.Gumps
                     break;
             }
 
-
-            if (dict != null)
-            {
-                int startX = 5;
-                int startY = 5;
-
-                foreach (KeyValuePair<string, string> item in dict.OrderBy(s => s.Key))
-                {
-                    Label label = new Label
-                    (
-                        item.Key + ":",
-                        true,
-                        33,
-                        font: 1,
-                        style: FontStyle.BlackBorder
-                    )
-                    {
-                        X = startX,
-                        Y = startY
-                    };
-
-                    databox.Add(label);
-
-                    int height = label.Height;
-
-                    label = new Label
-                    (
-                        item.Value,
-                        true,
-                        1153,
-                        font: 1,
-                        style: FontStyle.BlackBorder,
-                        maxwidth: WIDTH - 65 - 200
-                    )
-                    {
-                        X = startX + 200,
-                        Y = startY,
-                        AcceptMouseInput = true
-                    };
-
-                    label.MouseUp += OnLabelClick;
-
-                    if (label.Height > 0)
-                    {
-                        height = label.Height;
-                    }
-
-                    databox.Add(label);
-
-                    databox.Add
-                    (
-                        new Line
-                        (
-                            startX,
-                            startY + height + 2,
-                            WIDTH - 65,
-                            1,
-                            Color.Gray.PackedValue
-                        )
-                    );
-
-                    startY += height + 4;
-                }
-            }
-
-            databox.ReArrangeChildren();
-        }
-
-        public override void OnButtonClick(int buttonID)
-        {
-            if (buttonID == 0) // dump
-            {
-                //Dictionary<string, string> dict = ReflectionHolder.GetGameObjectProperties(_obj);
-
-                //if (dict != null)
-                //{
-                //    using (LogFile writer = new LogFile(CUOEnviroment.ExecutablePath, "dump_gameobject.txt"))
-                //    {
-                //        writer.Write("###################################################");
-                //        writer.Write($"CUO version: {CUOEnviroment.Version}");
-                //        writer.Write($"OBJECT TYPE: {_obj.GetType()}");
-
-                //        foreach (KeyValuePair<string, string> item in dict.OrderBy(s => s.Key))
-                //        {
-                //            writer.Write($"{item.Key} = {item.Value}");
-                //        }
-
-                //        writer.Write("###################################################");
-                //        writer.Write("");
-                //    }
-                //}
-            }
-        }
-
-        private static void OnLabelClick(object sender, EventArgs e)
-        {
-            Label l = (Label) sender;
-
-            if (l != null)
-            {
-                SDL.SDL_SetClipboardText(l.Text);
-            }
+            return dict;
         }
     }
 }
