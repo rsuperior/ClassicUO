@@ -1006,14 +1006,13 @@ namespace ClassicUO.Game.Scenes
 
             bool usecircle = ProfileManager.CurrentProfile.UseCircleOfTransparency;
 
-
             if (usecircle)
             {
                 int fx = (int) (World.Player.RealScreenPosition.X + World.Player.Offset.X);
                 int fy = (int) (World.Player.RealScreenPosition.Y + (World.Player.Offset.Y - World.Player.Offset.Z));
 
                 fx += 22;
-                fy -= 22;
+                fy += 22;
 
                 CircleOfTransparency.Draw(batcher, fx, fy);
             }
@@ -1057,7 +1056,7 @@ namespace ClassicUO.Game.Scenes
                 hueVec = Vector3.Zero;
                 _multi.Draw(batcher, _multi.RealScreenPosition.X, _multi.RealScreenPosition.Y, ref hueVec);
             }
-        
+
             // draw weather
             Weather.Draw(batcher, 0, 0);
             batcher.End();
