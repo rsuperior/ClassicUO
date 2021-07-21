@@ -226,7 +226,7 @@ namespace ClassicUO.Game.Scenes
                     break;
 
                 case MessageType.System:
-                    name = string.IsNullOrEmpty(e.Name) || e.Name.ToLowerInvariant() == "system" ? LocalizationManager.Get(LocalizationProperties.System) : e.Name;
+                    name = string.IsNullOrEmpty(e.Name) || string.Equals(e.Name, "system", StringComparison.InvariantCultureIgnoreCase) ? LocalizationManager.Get(LocalizationProperties.System) : e.Name;
 
                     text = e.Text;
 
@@ -244,7 +244,20 @@ namespace ClassicUO.Game.Scenes
                     break;
 
                 case MessageType.Label:
-                    name = LocalizationManager.Get(LocalizationProperties.YouSee);
+
+                    if (e.Parent == null || !SerialHelper.IsValid(e.Parent.Serial))
+                    {
+                        name = string.Empty;
+                    }
+                    else if (string.IsNullOrEmpty(e.Name)) 
+                    {
+                        name = LocalizationManager.Get(LocalizationProperties.YouSee);                      
+                    }
+                    else
+                    {
+                        name = e.Name;
+                    }
+                
                     text = e.Text;
 
                     break;
