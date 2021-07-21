@@ -193,9 +193,8 @@ namespace ClassicUO.IO.Resources
                             byte w = fonts.ReadByte();
                             byte h = fonts.ReadByte();
                             fonts.Skip(1);
-                            ushort[] data = fonts.ReadArray<ushort>(w * h);
-
-                            datas[j] = new FontCharacterData(w, h, data);
+                            datas[j] = new FontCharacterData(w, h, (ushort*) fonts.PositionAddress);
+                            fonts.Skip(w * h * sizeof(ushort));
                         }
 
                         _fontData[i] = datas;
@@ -614,7 +613,7 @@ namespace ClassicUO.IO.Resources
             return ss;
         }
 
-        private void GeneratePixelsASCII
+        private unsafe void GeneratePixelsASCII
         (
             ref FontTexture texture,
             byte font,
@@ -4173,9 +4172,9 @@ namespace ClassicUO.IO.Resources
     }
 
 
-    internal struct FontCharacterData
+    internal unsafe struct FontCharacterData
     {
-        public FontCharacterData(byte w, byte h, ushort[] data)
+        public FontCharacterData(byte w, byte h, ushort* data)
         {
             Width = w;
             Height = h;
@@ -4183,7 +4182,7 @@ namespace ClassicUO.IO.Resources
         }
 
         public byte Width, Height;
-        public ushort[] Data;
+        public ushort* Data;
     }
 
     internal sealed class MultilinesFontInfo
