@@ -26,7 +26,7 @@ namespace ClassicUO.UnitTests.IO
             {
                 writer.WriteUnicodeBE(str);
             }
-            
+
             Span<char> span = stackalloc char[str.Length + 1]; // '\0'
             str.AsSpan().CopyTo(span);
 
@@ -65,7 +65,7 @@ namespace ClassicUO.UnitTests.IO
         public void Write_BigEndian_String_Less_Fixed_Size_Than_RealString()
         {
             StackDataWriter writer = new StackDataWriter(32);
-           
+
             string str = new string('a', 255);
             int size = 239;
 
