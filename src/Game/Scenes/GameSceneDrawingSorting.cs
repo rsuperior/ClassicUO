@@ -288,7 +288,7 @@ namespace ClassicUO.Game.Scenes
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsInViewport(GameObject obj)
+        private bool CheckHorizontalPlane(GameObject obj)
         { 
             if (UpdateDrawPosition && obj.CurrentRenderIndex != _renderIndex || obj.IsPositionChanged)
             {
@@ -416,7 +416,7 @@ namespace ClassicUO.Game.Scenes
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool IsVisibileAtZ(GameObject obj)
+        private bool CheckVerticalPlane(GameObject obj)
         {
             int testMaxZ = obj.RealScreenPosition.Y;
 
@@ -528,7 +528,7 @@ namespace ClassicUO.Game.Scenes
                     continue;
                 }
 
-                if (!IsInViewport(obj))
+                if (!CheckHorizontalPlane(obj))
                 {
                     break;
                 }
@@ -558,7 +558,7 @@ namespace ClassicUO.Game.Scenes
 
                         obj.CurrentRenderIndex = _renderIndex;
 
-                        if (!IsVisibileAtZ(obj))
+                        if (!CheckVerticalPlane(obj))
                         {
                             continue;
                         }
@@ -607,7 +607,7 @@ namespace ClassicUO.Game.Scenes
 
                         obj.CurrentRenderIndex = _renderIndex;
 
-                        if (!IsVisibileAtZ(obj))
+                        if (!CheckVerticalPlane(obj))
                         {
                             continue;
                         }
@@ -668,7 +668,7 @@ namespace ClassicUO.Game.Scenes
 
                         obj.CurrentRenderIndex = _renderIndex;
 
-                        if (!IsVisibileAtZ(obj))
+                        if (!CheckVerticalPlane(obj))
                         {
                             continue;
                         }
@@ -716,7 +716,7 @@ namespace ClassicUO.Game.Scenes
 
                         obj.CurrentRenderIndex = _renderIndex;
 
-                        if (!IsVisibileAtZ(obj))
+                        if (!CheckVerticalPlane(obj))
                         {
                             continue;
                         }
@@ -741,7 +741,7 @@ namespace ClassicUO.Game.Scenes
 
                         obj.CurrentRenderIndex = _renderIndex;
 
-                        if (!IsVisibileAtZ(obj))
+                        if (!CheckVerticalPlane(obj))
                         {
                             continue;
                         }
@@ -764,7 +764,7 @@ namespace ClassicUO.Game.Scenes
 
                         obj.CurrentRenderIndex = _renderIndex;
 
-                        if (!IsVisibileAtZ(obj))
+                        if (!CheckVerticalPlane(obj))
                         {
                             continue;
                         }
