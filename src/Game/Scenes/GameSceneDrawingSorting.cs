@@ -31,12 +31,14 @@
 #endregion
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Map;
+using ClassicUO.Game.UI.Controls;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
 using ClassicUO.Utility;
@@ -47,15 +49,7 @@ namespace ClassicUO.Game.Scenes
 {
     internal partial class GameScene
     {
-        struct DrawingInfo
-        {
-            public GameObject Object;
-            public ushort Hue;
-        }
-
-        private static DrawingInfo[] _renderList = new DrawingInfo[10000];
         private static GameObject[] _foliages = new GameObject[100];
-        private static readonly GameObject[] _objectHandles = new GameObject[Constants.MAX_OBJECT_HANDLES];
         private static readonly TreeUnion[] _treeInfos =
         {
             new TreeUnion(0x0D45, 0x0D4C),
@@ -75,12 +69,13 @@ namespace ClassicUO.Game.Scenes
         private int _maxZ;
         private Vector2 _minPixel, _maxPixel;
         private bool _noDrawRoofs;
-        private int _objectHandlesCount;
         private Point _offset, _maxTile, _minTile, _last_scaled_offset;
         private int _oldPlayerX, _oldPlayerY, _oldPlayerZ;
         private int _renderIndex = 1;
-        private int _renderListCount, _foliageCount;
-
+        private int _renderListCount, _foliageCount, _renderListLandCount;
+        private GameObject _first, _renderList;
+        private GameObject _firstLand, _renderListLand;
+        private bool _useLandList = false;
 
         public Point ScreenOffset => _offset;
         public sbyte FoliageIndex { get; private set; }
@@ -270,7 +265,258 @@ namespace ClassicUO.Game.Scenes
             }
         }
 
-        private bool AddTileToRenderList(GameObject obj, int worldX, int worldY, bool useObjectHandles, int maxZ, GameObject parent = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void UpdateObjectHandles(Entity obj, bool useObjectHandles)
+        {
+            if (useObjectHandles && NameOverHeadManager.IsAllowed(obj))
+            {
+                if (obj.ObjectHandlesStatus != ObjectHandlesStatus.CLOSED)
+                {
+                    if (obj.ObjectHandlesStatus == ObjectHandlesStatus.NONE)
+                    {
+                        obj.ObjectHandlesStatus = ObjectHandlesStatus.OPEN;
+                    }
+
+                    obj.UpdateTextCoordsV();
+                }
+            }
+            else if (obj.ObjectHandlesStatus != ObjectHandlesStatus.NONE)
+            {
+                obj.ObjectHandlesStatus = ObjectHandlesStatus.NONE;
+                obj.UpdateTextCoordsV();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsInViewport(GameObject obj)
+        { 
+            if (UpdateDrawPosition && obj.CurrentRenderIndex != _renderIndex || obj.IsPositionChanged)
+            {
+                obj.UpdateRealScreenPosition(_offset.X, _offset.Y);
+            }
+
+            obj.UseInRender = 0xFF;
+
+            int drawX = obj.RealScreenPosition.X;
+
+            if (drawX < _minPixel.X || drawX > _maxPixel.X)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void CheckIfBehindATree(GameObject obj, int worldX, int worldY, ref StaticTiles itemData)
+        {
+            if (itemData.IsFoliage)
+            {
+                if (obj.FoliageIndex != FoliageIndex)
+                {
+                    sbyte index = 0;
+
+                    bool check = World.Player.X <= worldX && World.Player.Y <= worldY;
+
+                    if (!check)
+                    {
+                        check = World.Player.Y <= worldY && World.Player.X <= worldX + 1;
+
+                        if (!check)
+                        {
+                            check = World.Player.X <= worldX && World.Player.Y <= worldY + 1;
+                        }
+                    }
+
+                    if (check)
+                    {
+                        ArtTexture texture = ArtLoader.Instance.GetTexture(obj.Graphic);
+
+                        if (texture != null)
+                        {
+                            _rectangleObj.X = obj.RealScreenPosition.X - (texture.Width >> 1) + texture.ImageRectangle.X;
+                            _rectangleObj.Y = obj.RealScreenPosition.Y - texture.Height + texture.ImageRectangle.Y;
+                            _rectangleObj.Width = texture.ImageRectangle.Width;
+                            _rectangleObj.Height = texture.ImageRectangle.Height;
+
+                            check = Exstentions.InRect(ref _rectangleObj, ref _rectanglePlayer);
+
+                            if (check)
+                            {
+                                index = FoliageIndex;
+                                IsFoliageUnion(obj.Graphic, obj.X, obj.Y, obj.Z);
+                            }
+                        }
+                    }
+
+                    obj.FoliageIndex = index;
+                }
+
+                if (_foliageCount >= _foliages.Length)
+                {
+                    int newsize = _foliages.Length + 50;
+                    Array.Resize(ref _foliages, newsize);
+                }
+
+                _foliages[_foliageCount++] = obj;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool ProcessAlpha(GameObject obj, ref StaticTiles itemData)
+        {
+            if (obj.Z >= _maxZ)
+            {
+                bool changed;
+
+                if (_alphaChanged)
+                {
+                    changed = obj.ProcessAlpha(0);
+                }
+                else
+                {
+                    changed = obj.AlphaHue != 0;
+                }
+                
+                if (!changed)
+                {
+                    obj.UseInRender = (byte) _renderIndex;
+
+                    return false;
+                }
+            }
+            else if (_noDrawRoofs && itemData.IsRoof)
+            {
+                if (_alphaChanged)
+                {
+                    if (!obj.ProcessAlpha(0))
+                    {
+                        return false;
+                    }
+                }
+
+                return obj.AlphaHue != 0;
+            }
+            else if (itemData.IsTranslucent && obj.AlphaHue != 178)
+            {
+                if (_alphaChanged)
+                {
+                    obj.ProcessAlpha(178);
+                }
+            }
+            else if (!itemData.IsFoliage && obj.AlphaHue != 0xFF)
+            {
+                if (_alphaChanged)
+                {
+                    obj.ProcessAlpha(0xFF);
+                }
+            }
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsVisibileAtZ(GameObject obj)
+        {
+            int testMaxZ = obj.RealScreenPosition.Y;
+
+            if (testMaxZ > _maxPixel.Y)
+            {
+                return false;
+            }
+
+            int testMinZ;
+
+            if (obj is Land t && t.IsStretched)
+            {
+                testMinZ = (obj.RealScreenPosition.Y + (obj.Z << 2)) - (t.MinZ << 2);
+            }
+            else
+            {
+                testMinZ = testMaxZ;
+            }
+
+            if (testMinZ < _minPixel.Y)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private byte CalculateObjectHeight(ref int maxObjectZ, ref StaticTiles itemData)
+        {
+            if (itemData.Height != 0xFF /*&& itemData.Flags != 0*/)
+            {
+                byte height = itemData.Height;
+
+                if (itemData.Height == 0)
+                {
+                    if (!itemData.IsBackground && !itemData.IsSurface)
+                    {
+                        height = 10;
+                    }
+                }
+
+                if ((itemData.Flags & (TileFlag.Bridge)) != 0)
+                {
+                    height /= 2;
+                }
+
+                maxObjectZ += height;
+
+                return height;
+            }
+
+            return 0xFF;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool IsFoliageVisibleAtSeason(GameObject obj, Season season)
+        {
+            ref StaticTiles itemData = ref TileDataLoader.Instance.StaticData[obj.Graphic];
+
+            return !(itemData.IsFoliage && !itemData.IsMultiMovable && season >= Season.Winter && !(obj is Multi));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void PushToRenderList(GameObject obj)
+        {
+            bool island = false;
+
+            if (!_useLandList && island)
+            {
+                island = false;
+            }
+
+            ref GameObject first = ref (island ? ref _firstLand : ref _first);
+            ref GameObject renderList = ref (island ? ref _renderListLand : ref _renderList);
+
+            if (first == null)
+            {
+                first = renderList = obj;
+            }
+            else
+            {
+                renderList.RenderListNext = obj;
+                renderList = obj;
+            }
+
+            if (island)
+            {
+                ++_renderListLandCount;
+            }
+            else
+            {
+                ++_renderListCount;
+            }
+
+
+            obj.UseInRender = (byte)_renderIndex;
+        }
+
+        private unsafe bool AddTileToRenderList(GameObject obj, int worldX, int worldY, bool useObjectHandles, int maxZ, GameObject parent = null)
         {
             TileDataLoader loader = TileDataLoader.Instance;
 
@@ -282,343 +528,255 @@ namespace ClassicUO.Game.Scenes
                     continue;
                 }
 
-                if (UpdateDrawPosition && obj.CurrentRenderIndex != _renderIndex || obj.IsPositionChanged)
-                {
-                    obj.UpdateRealScreenPosition(_offset.X, _offset.Y);
-                }
-
-                obj.UseInRender = 0xFF;
-
-                int drawX = obj.RealScreenPosition.X;
-                int drawY = obj.RealScreenPosition.Y;
-
-                if (drawX < _minPixel.X || drawX > _maxPixel.X)
+                if (!IsInViewport(obj))
                 {
                     break;
                 }
 
                 int maxObjectZ = obj.PriorityZ;
 
-                ref StaticTiles itemData = ref _empty;
-
-                bool changinAlpha = false;
-                bool island = false;
-                bool iscorpse = false;
-                bool ismobile = false;
-                bool push_with_priority = false;
-                short height = 0;
-                ushort graphic = obj.Graphic;
 
                 switch (obj)
                 {
-                    case Mobile _:
+                    case Mobile mobile:
+
+                        UpdateObjectHandles(mobile, useObjectHandles);
+
                         maxObjectZ += Constants.DEFAULT_CHARACTER_HEIGHT;
-                        ismobile = true;
-                        push_with_priority = true;
 
-                        break;
-
-                    case Land _:
-                        island = true;
-                        goto SKIP_HANDLES_CHECK;
-
-                    case Item it:
-
-                        if (it.IsCorpse)
+                        if (maxObjectZ > maxZ)
                         {
-                            iscorpse = true;
-                            push_with_priority = true;
-
-                            goto default;
-                        }
-                        else if (it.IsMulti)
-                        {
-                            graphic = it.MultiGraphic;
+                            return false;
                         }
 
-                        push_with_priority = it.ItemData.IsMultiMovable;
+                        StaticTiles empty = default;
 
-                        goto default;
-
-                    case MovingEffect moveEff:
-                        
-                        push_with_priority = true;
-                        goto default;
-
-                    case Multi multi:
-
-                        push_with_priority = multi.IsMovable;
-
-                        goto default;
-
-                    default:
-
-                        itemData = ref loader.StaticData[graphic];
-
-                        if (itemData.IsFoliage && !itemData.IsMultiMovable && World.Season >= Season.Winter && !(obj is Multi))
+                        if (!ProcessAlpha(obj, ref empty))
                         {
                             continue;
                         }
 
-                        if (_noDrawRoofs && itemData.IsRoof)
-                        {
-                            if (_alphaChanged)
-                            {
-                                changinAlpha = obj.ProcessAlpha(0);
-                            }
-                            else
-                            {
-                                changinAlpha = obj.AlphaHue != 0;
-                            }
+                        obj.CurrentRenderIndex = _renderIndex;
 
-                            if (!changinAlpha)
-                            {
-                                continue;
-                            }
+                        if (!IsVisibileAtZ(obj))
+                        {
+                            continue;
+                        }
+
+                        AddOffsetCharacterTileToRenderList(obj, useObjectHandles, false);
+
+                        PushToRenderList(obj);
+
+                        break;
+
+                    case Item item:
+
+                        ref StaticTiles itemData = ref (item.IsMulti ? ref TileDataLoader.Instance.StaticData[item.MultiGraphic] : ref item.ItemData);
+
+                        if (!item.IsCorpse && itemData.IsInternal)
+                        {
+                            continue;
+                        }
+
+                        if (item.IsCorpse || (!item.IsMulti && (!item.IsLocked || item.IsLocked && itemData.IsContainer)))
+                        {
+                            UpdateObjectHandles(item, useObjectHandles);
+                        }
+
+                        if (!IsFoliageVisibleAtSeason(obj, World.Season))
+                        {
+                            continue;
+                        }
+
+                        if (!ProcessAlpha(obj, ref itemData))
+                        {
+                            continue;
+                        }
+
+                        if (itemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                        {
+                            continue;
+                        }
+
+                        byte height = CalculateObjectHeight(ref maxObjectZ, ref itemData);
+
+                        if (maxObjectZ > maxZ)
+                        {
+                            return itemData.Height != 0 && maxObjectZ - maxZ < height;
+                        }
+
+                        obj.CurrentRenderIndex = _renderIndex;
+
+                        if (!IsVisibileAtZ(obj))
+                        {
+                            continue;
+                        }
+
+                        if (item.IsCorpse)
+                        {
+                            AddOffsetCharacterTileToRenderList(obj, useObjectHandles, false);
+                        }
+                        else if (itemData.IsMultiMovable)
+                        {
+                            AddOffsetCharacterTileToRenderList(obj, useObjectHandles, true);
+                        }
+
+                        if (!item.IsCorpse)
+                        {
+                            CheckIfBehindATree(obj, worldX, worldY, ref itemData);
+                        }
+
+                        PushToRenderList(obj);
+
+                        break;
+
+
+                    case Static staticc:
+
+                        if (staticc.ItemData.IsInternal)
+                        {
+                            continue;
+                        }
+
+                        if (!IsFoliageVisibleAtSeason(obj, World.Season))
+                        {
+                            continue;
+                        }
+
+                        if (!ProcessAlpha(obj, ref staticc.ItemData))
+                        {
+                            continue;
                         }
 
                         //we avoid to hide impassable foliage or bushes, if present...
-                        if (ProfileManager.CurrentProfile.TreeToStumps && itemData.IsFoliage && !itemData.IsMultiMovable && !(obj is Multi) || ProfileManager.CurrentProfile.HideVegetation && (obj is Multi mm && mm.IsVegetation || obj is Static st && st.IsVegetation))
+                        if (staticc.ItemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
                         {
                             continue;
                         }
 
-
-                        if (itemData.Height != 0xFF /*&& itemData.Flags != 0*/)
+                        if (!staticc.ItemData.IsMultiMovable && staticc.IsVegetation && ProfileManager.CurrentProfile.HideVegetation)
                         {
-                            height = itemData.Height;
-
-                            if (itemData.Height == 0)
-                            {
-                                if (!itemData.IsBackground && !itemData.IsSurface)
-                                {
-                                    height = 10;
-                                }
-                            }
-
-                            if ((itemData.Flags & (TileFlag.Bridge)) != 0)
-                            {
-                                height /= 2;
-                            }
-
-                            maxObjectZ += height;
+                            continue;
                         }
+
+                        height = CalculateObjectHeight(ref maxObjectZ, ref staticc.ItemData);
+
+                        if (maxObjectZ > maxZ)
+                        {
+                            return staticc.ItemData.Height != 0 && maxObjectZ - maxZ < height;
+                        }
+
+                        obj.CurrentRenderIndex = _renderIndex;
+
+                        if (!IsVisibileAtZ(obj))
+                        {
+                            continue;
+                        }
+
+                        CheckIfBehindATree(obj, worldX, worldY, ref staticc.ItemData);
+
+                        PushToRenderList(obj);
+
+                        break;
+
+                    case Multi multi:
+
+                        if (multi.ItemData.IsInternal)
+                        {
+                            continue;
+                        }
+
+                        if (!IsFoliageVisibleAtSeason(obj, World.Season))
+                        {
+                            continue;
+                        }
+
+                        if (!ProcessAlpha(obj, ref multi.ItemData))
+                        {
+                            continue;
+                        }
+
+                        //we avoid to hide impassable foliage or bushes, if present...
+                        if (multi.ItemData.IsFoliage && ProfileManager.CurrentProfile.TreeToStumps)
+                        {
+                            continue;
+                        }
+
+                        if (!multi.ItemData.IsMultiMovable && multi.IsVegetation && ProfileManager.CurrentProfile.HideVegetation)
+                        {
+                            continue;
+                        }
+
+                        height = CalculateObjectHeight(ref maxObjectZ, ref multi.ItemData);
+
+                        if (maxObjectZ > maxZ)
+                        {
+                            return multi.ItemData.Height != 0 && maxObjectZ - maxZ < height;
+                        }
+
+                        obj.CurrentRenderIndex = _renderIndex;
+
+                        if (!IsVisibileAtZ(obj))
+                        {
+                            continue;
+                        }
+
+                        if (multi.IsMovable)
+                        {
+                            AddOffsetCharacterTileToRenderList(obj, useObjectHandles, true);
+                        }
+
+                        CheckIfBehindATree(obj, worldX, worldY, ref multi.ItemData);
+
+                        PushToRenderList(obj);
+
+                        break;
+
+                    case GameEffect effect:
+
+                        if (!ProcessAlpha(obj, ref TileDataLoader.Instance.StaticData[effect.Graphic]))
+                        {
+                            continue;
+                        }
+
+                        obj.CurrentRenderIndex = _renderIndex;
+
+                        if (!IsVisibileAtZ(obj))
+                        {
+                            continue;
+                        }
+
+                        if (effect.IsMoving) // TODO: check for typeof(MovingEffect) ?
+                        {
+                            AddOffsetCharacterTileToRenderList(obj, useObjectHandles, true);
+                        }
+
+                        PushToRenderList(obj);
+
+                        break;
+
+                    case Land land:
+
+                        if (maxObjectZ > maxZ)
+                        {
+                            return false;
+                        }
+
+                        obj.CurrentRenderIndex = _renderIndex;
+
+                        if (!IsVisibileAtZ(obj))
+                        {
+                            continue;
+                        }
+
+                        PushToRenderList(obj);
 
                         break;
                 }
-
-
-                if (useObjectHandles && NameOverHeadManager.IsAllowed(obj as Entity))
-                {
-                    if ((ismobile || iscorpse || obj is Item it && (!it.IsLocked || it.IsLocked && itemData.IsContainer) && !it.IsMulti) && !obj.ClosedObjectHandles)
-                    {
-                        int index = _objectHandlesCount % Constants.MAX_OBJECT_HANDLES;
-
-                        if (_objectHandles[index] != null && !_objectHandles[index].ObjectHandlesOpened)
-                        {
-                            _objectHandles[index].UseObjectHandles = false;
-                        }
-
-                        _objectHandles[index] = obj;
-                        obj.UseObjectHandles = true;
-                        _objectHandlesCount++;
-                        obj.UpdateTextCoordsV();
-                    }
-                }
-                else if (obj.ClosedObjectHandles)
-                {
-                    obj.ClosedObjectHandles = false;
-                    obj.ObjectHandlesOpened = false;
-                    obj.UpdateTextCoordsV();
-                }
-                else if (obj.UseObjectHandles)
-                {
-                    obj.ObjectHandlesOpened = false;
-                    obj.UseObjectHandles = false;
-                    obj.UpdateTextCoordsV();
-                }
-
-
-                SKIP_HANDLES_CHECK:
-
-                if (maxObjectZ > maxZ)
-                {
-                    return !push_with_priority && itemData.Height != 0 && maxObjectZ - maxZ < height;
-                }
-
-                obj.CurrentRenderIndex = _renderIndex;
-
-                if (!island)
-                {
-                    //obj.UpdateTextCoordsV();
-                }
-                else
-                {
-                    goto SKIP_INTERNAL_CHECK;
-                }
-
-                if (!ismobile && !iscorpse && !island && itemData.IsInternal)
-                {
-                    continue;
-                }
-
-                SKIP_INTERNAL_CHECK:
-
-                sbyte z = obj.Z;
-
-                if (!island && z >= _maxZ)
-                {
-                    if (!changinAlpha)
-                    {
-                        if (_alphaChanged)
-                        {
-                            changinAlpha = obj.ProcessAlpha(0);
-                        }
-                        else
-                        {
-                            changinAlpha = obj.AlphaHue != 0;
-                        }
-
-                        if (!changinAlpha)
-                        {
-                            obj.UseInRender = (byte) _renderIndex;
-
-                            continue;
-                        }
-                    }
-                }
-
-                int testMaxZ = drawY;
-
-                if (testMaxZ > _maxPixel.Y)
-                {
-                    continue;
-                }
-
-                int testMinZ = drawY + (z << 2);
-
-                if (island)
-                {
-                    Land t = obj as Land;
-
-                    if (t.IsStretched)
-                    {
-                        testMinZ -= t.MinZ << 2;
-                    }
-                    else
-                    {
-                        testMinZ = testMaxZ;
-                    }
-                }
-                else
-                {
-                    testMinZ = testMaxZ;
-                }
-
-                if (testMinZ < _minPixel.Y)
-                {
-                    continue;
-                }
-
-                if (push_with_priority)
-                {
-                    AddOffsetCharacterTileToRenderList(obj, useObjectHandles, !iscorpse && !ismobile);
-                }
-
-                if (!island)
-                {
-                    if (!iscorpse && !ismobile && itemData.IsFoliage)
-                    {
-                        if (obj.FoliageIndex != FoliageIndex)
-                        {
-                            sbyte index = 0;
-
-                            bool check = World.Player.X <= worldX && World.Player.Y <= worldY;
-
-                            if (!check)
-                            {
-                                check = World.Player.Y <= worldY && World.Player.X <= worldX + 1;
-
-                                if (!check)
-                                {
-                                    check = World.Player.X <= worldX && World.Player.Y <= worldY + 1;
-                                }
-                            }
-
-                            if (check)
-                            {
-                                ArtTexture texture = ArtLoader.Instance.GetTexture(graphic);
-
-                                if (texture != null)
-                                {
-                                    _rectangleObj.X = drawX - (texture.Width >> 1) + texture.ImageRectangle.X;
-                                    _rectangleObj.Y = drawY - texture.Height + texture.ImageRectangle.Y;
-                                    _rectangleObj.Width = texture.ImageRectangle.Width;
-                                    _rectangleObj.Height = texture.ImageRectangle.Height;
-
-                                    check = Exstentions.InRect(ref _rectangleObj, ref _rectanglePlayer);
-
-                                    if (check)
-                                    {
-                                        index = FoliageIndex;
-                                        IsFoliageUnion(obj.Graphic, obj.X, obj.Y, z);
-                                    }
-                                }
-                            }
-
-                            obj.FoliageIndex = index;
-                        }
-
-                        if (_foliageCount >= _foliages.Length)
-                        {
-                            int newsize = _foliages.Length + 50;
-                            Array.Resize(ref _foliages, newsize);
-                        }
-
-                        _foliages[_foliageCount++] = obj;
-
-                        goto FOLIAGE_SKIP;
-                    }
-
-                    if (_alphaChanged && !changinAlpha)
-                    {
-                        if (itemData.IsTranslucent)
-                        {
-                            obj.ProcessAlpha(178);
-                        }
-                        else if (!itemData.IsFoliage && obj.AlphaHue != 0xFF)
-                        {
-                            obj.ProcessAlpha(0xFF);
-                        }
-                    }
-                }
-                
-                FOLIAGE_SKIP:
-
-                if (_renderListCount >= _renderList.Length)
-                {
-                    int newsize = _renderList.Length + 1000;
-                    Array.Resize(ref _renderList, newsize);
-                }
-                
-                ref var info = ref _renderList[_renderListCount++];
-                info.Object = obj;
-
-                if (CUOEnviroment.Debug)
-                {
-                    info.Hue = (ushort) (parent != null ? 0x0044 : 300 + obj.PriorityZ);
-                }
-                else
-                {
-                    info.Hue = obj.Hue;
-                }
-
-                obj.UseInRender = (byte) _renderIndex;
             }
 
             return false;
         }
-
 
         private unsafe void AddOffsetCharacterTileToRenderList(GameObject entity, bool useObjectHandles, bool ignoreDefaultHeightOffset)
         {

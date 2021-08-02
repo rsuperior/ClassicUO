@@ -502,6 +502,13 @@ namespace ClassicUO.Game.Scenes
             _renderListCount = 0;
             _foliageCount = 0;
 
+            _first = null;
+            _renderList = null;
+
+            _firstLand = null;
+            _renderListLand = null;
+            _renderListLandCount = 0;
+
             if (!World.InGame)
             {
                 return;
@@ -524,7 +531,6 @@ namespace ClassicUO.Game.Scenes
 
             GetViewPort();
 
-            _objectHandlesCount = 0;
             _useObjectHandles = NameOverHeadManager.IsToggled || Keyboard.Ctrl && Keyboard.Shift;
 
             if (_useObjectHandles)
@@ -1021,17 +1027,31 @@ namespace ClassicUO.Game.Scenes
 
             int z = World.Player.Z + 5;
 
-            ushort hue = 0;
             Vector3 hueVec = Vector3.Zero;
 
             GameObject.DrawTransparent = usecircle;
 
-            for (int i = 0; i < _renderListCount; ++i)
+            var obj = _firstLand;
+
+            for (int i = 0; i < _renderListLandCount; obj = obj.RenderListNext, ++i)
             {
-                ref var info = ref _renderList[i];
+                if (obj.Z <= _maxGroundZ)
+                {
+                    //if (usecircle)
+                    //{
+                    //    GameObject.DrawTransparent = obj.TransparentTest(z);
+                    //}
 
-                var obj = info.Object;
+                    if (obj.Draw(batcher, obj.RealScreenPosition.X, obj.RealScreenPosition.Y, ref hueVec))
+                    {
+                        ++RenderedObjectsCount;
+                    }
+                }
+            }
 
+            obj = _first;
+            for (int i = 0; i < _renderListCount; obj = obj.RenderListNext, ++i)
+            {
                 if (obj.Z <= _maxGroundZ)
                 {
                     if (usecircle)
@@ -1039,15 +1059,10 @@ namespace ClassicUO.Game.Scenes
                         GameObject.DrawTransparent = obj.TransparentTest(z);
                     }
 
-                    hue = obj.Hue;
-                    obj.Hue = info.Hue;
-
                     if (obj.Draw(batcher, obj.RealScreenPosition.X, obj.RealScreenPosition.Y, ref hueVec))
                     {
                         ++RenderedObjectsCount;
                     }
-
-                    obj.Hue = hue;
                 }
             }
 

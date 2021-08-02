@@ -99,6 +99,7 @@ namespace ClassicUO.Game.GameObjects
         public short PriorityZ;
         public GameObject TNext;
         public GameObject TPrevious;
+        public GameObject RenderListNext;
         public byte UseInRender;
 
         public ushort X, Y;
@@ -355,6 +356,7 @@ namespace ClassicUO.Game.GameObjects
 
             Next = null;
             Previous = null;
+            RenderListNext = null;
 
             Clear();
             RemoveFromTile();
@@ -371,7 +373,7 @@ namespace ClassicUO.Game.GameObjects
             _screenPosition = Point.Zero;
             IsFlipped = false;
             Graphic = 0;
-            UseObjectHandles = ClosedObjectHandles = ObjectHandlesOpened = false;
+            ObjectHandlesStatus = ObjectHandlesStatus.NONE;
             FrameInfo = Rectangle.Empty;
         }
     }

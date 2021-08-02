@@ -71,7 +71,6 @@ namespace ClassicUO.Game
         public const byte FOLIAGE_ALPHA = 76;
         public const byte ALPHA_TIME = 20;
 
-        public const int MAX_OBJECT_HANDLES = 200;
         public const int OBJECT_HANDLES_GUMP_WIDTH = 100;
         public const int OBJECT_HANDLES_GUMP_HEIGHT = 18;
 

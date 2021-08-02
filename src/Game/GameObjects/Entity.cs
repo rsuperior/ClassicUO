@@ -152,20 +152,20 @@ namespace ClassicUO.Game.GameObjects
         {
             base.Update(totalTime, frameTime);
 
-            if (UseObjectHandles && !ObjectHandlesOpened)
+            if (ObjectHandlesStatus == ObjectHandlesStatus.OPEN)
             {
+                ObjectHandlesStatus = ObjectHandlesStatus.DISPLAYING;
+
                 // TODO: Some servers may not want to receive this (causing original client to not send it),
                 //but all servers tested (latest POL, old POL, ServUO, Outlands) do.
+
                 if ( /*Client.Version > ClientVersion.CV_200 &&*/ SerialHelper.IsMobile(Serial))
                 {
                     Socket.Send_NameRequest(Serial);
                 }
 
                 UIManager.Add(new NameOverheadGump(this));
-
-                ObjectHandlesOpened = true;
             }
-
 
             if (HitsMax > 0)
             {

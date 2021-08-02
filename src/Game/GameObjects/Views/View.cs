@@ -41,6 +41,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ClassicUO.Game.GameObjects
 {
+    enum ObjectHandlesStatus
+    {
+        NONE,
+        OPEN,
+        CLOSED,
+        DISPLAYING
+    }
+
     internal abstract partial class GameObject
     {
         public static bool DrawTransparent;
@@ -63,13 +71,11 @@ namespace ClassicUO.Game.GameObjects
                 return state;
             }
         );
-        public bool UseObjectHandles { get; set; }
-        public bool ClosedObjectHandles { get; set; }
-        public bool ObjectHandlesOpened { get; set; }
+
         public byte AlphaHue { get; set; }
         public bool AllowedToDraw { get; set; } = true;
 
-
+        public ObjectHandlesStatus ObjectHandlesStatus;
         public Rectangle FrameInfo;
         protected bool IsFlipped;
 
