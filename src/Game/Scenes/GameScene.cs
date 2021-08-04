@@ -93,7 +93,7 @@ namespace ClassicUO.Game.Scenes
         private int _lightCount;
         private readonly LightData[] _lights = new LightData[Constants.MAX_LIGHTS_DATA_INDEX_COUNT];
         private Item _multi;
-        private Rectangle _rectangleObj = Rectangle.Empty, _rectanglePlayer;
+        private Rectangle _rectanglePlayer;
         private Vector3 _selectionLines = Vector3.Zero;
         private long _timePing;
 

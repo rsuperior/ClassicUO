@@ -334,12 +334,11 @@ namespace ClassicUO.Game.Scenes
 
                         if (texture != null)
                         {
-                            _rectangleObj.X = obj.RealScreenPosition.X - (texture.Width >> 1) + texture.ImageRectangle.X;
-                            _rectangleObj.Y = obj.RealScreenPosition.Y - texture.Height + texture.ImageRectangle.Y;
-                            _rectangleObj.Width = texture.ImageRectangle.Width;
-                            _rectangleObj.Height = texture.ImageRectangle.Height;
+                            Rectangle rect = texture.ImageRectangle;
+                            rect.X += obj.RealScreenPosition.X + 22;
+                            rect.Y += obj.RealScreenPosition.Y + 22;
 
-                            check = Exstentions.InRect(ref _rectangleObj, ref _rectanglePlayer);
+                            check = Exstentions.InRect(ref _rectanglePlayer, ref rect);
 
                             if (check)
                             {

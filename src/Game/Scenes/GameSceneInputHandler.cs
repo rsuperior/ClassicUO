@@ -173,11 +173,11 @@ namespace ClassicUO.Game.Scenes
                 _selectionEnd.Y = Mouse.Position.Y;
             }
 
-
-            _rectangleObj.X = _selectionStart.X - Camera.Bounds.X;
-            _rectangleObj.Y = _selectionStart.Y - Camera.Bounds.Y;
-            _rectangleObj.Width = _selectionEnd.X - Camera.Bounds.X - _rectangleObj.X;
-            _rectangleObj.Height = _selectionEnd.Y - Camera.Bounds.Y - _rectangleObj.Y;
+            Rectangle rectObj = new Rectangle();
+            rectObj.X = _selectionStart.X - Camera.Bounds.X;
+            rectObj.Y = _selectionStart.Y - Camera.Bounds.Y;
+            rectObj.Width = _selectionEnd.X - Camera.Bounds.X - rectObj.X;
+            rectObj.Height = _selectionEnd.Y - Camera.Bounds.Y - rectObj.Y;
 
             int finalX = 100;
             int finalY = 100;
@@ -211,7 +211,7 @@ namespace ClassicUO.Game.Scenes
                 _rectanglePlayer.Width = size.X - p.X;
                 _rectanglePlayer.Height = size.Y - p.Y;
 
-                if (_rectangleObj.Intersects(_rectanglePlayer))
+                if (rectObj.Intersects(_rectanglePlayer))
                 {
                     if (mobile != World.Player)
                     {
