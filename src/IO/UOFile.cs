@@ -117,19 +117,7 @@ namespace ClassicUO.IO
         }
 
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Fill(ref byte[] buffer, int count)
-        {
-            byte* ptr = (byte*) PositionAddress;
-
-            for (int i = 0; i < count; i++)
-            {
-                buffer[i] = ptr[i];
-            }
-
-            Position += count;
-        }
-
+       
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal T[] ReadArray<T>(int count) where T : struct
         {
