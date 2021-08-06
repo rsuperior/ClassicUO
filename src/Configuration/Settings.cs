@@ -56,7 +56,6 @@ namespace ClassicUO.Configuration
         public string UltimaOnlineDirectory { get; set; } = "";
         public string ProfilesPath { get; set; } = string.Empty;
         public string ClientVersion { get; set; } = string.Empty;
-        public string LastCharacterName { get; set; } = string.Empty;
         public string Language { get; set; } = "";
         public ushort LastServerNum { get; set; } = 1;
         public string LastServerName { get; set; } = string.Empty;
@@ -275,7 +274,6 @@ namespace ClassicUO.Configuration
                     writer.WriteString("ultimaonlinedirectory", UltimaOnlineDirectory);
                     writer.WriteString("profilespath", string.Empty);
                     writer.WriteString("clientversion", ClientVersion);
-                    writer.WriteString("lastcharactername", LastCharacterName);
                     writer.WriteString("lang", Language);
                     writer.WriteNumber("lastservernum", LastServerNum);
                     writer.WriteString("last_server_name", LastServerName);

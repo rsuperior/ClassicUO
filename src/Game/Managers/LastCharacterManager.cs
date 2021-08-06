@@ -115,16 +115,21 @@ namespace ClassicUO.Game.Managers
             }
 
             // minijson understands simple objects :)
-            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            List<Dictionary<string, string>> list = new List<Dictionary<string, string>>(LastCharacters.Count);
 
             foreach (var c in LastCharacters)
             {
+                Dictionary<string, string> data = new Dictionary<string, string>();
+
                 data["AccountName"] = c.AccountName;
                 data["LastCharacterName"] = c.LastCharacterName;
                 data["ServerName"] = c.ServerName;
+
+                list.Add(data);
             }
 
-            File.WriteAllText(_lastCharacterFile, MiniJson.Serialize(data));
+            File.WriteAllText(_lastCharacterFile, MiniJson.Serialize(list));
         }
 
         public static string GetLastCharacter(string account, string server)

@@ -89,6 +89,13 @@ namespace ClassicUO.Utility.Json
             {
                 return null;
             }
+
+            if (json.Peek() <= -1)
+            {
+                json.Dispose();
+                return null;
+            }
+
             return Parser.Parse(json);
         }
 
