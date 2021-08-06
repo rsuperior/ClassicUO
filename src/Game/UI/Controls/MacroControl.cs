@@ -37,8 +37,8 @@ using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
-using ClassicUO.Renderer;
 using ClassicUO.Localization;
+using ClassicUO.Renderer;
 using SDL2;
 
 namespace ClassicUO.Game.UI.Controls
@@ -78,41 +78,47 @@ namespace ClassicUO.Game.UI.Controls
                     170,
                     25,
                     ButtonAction.Activate,
-                    LocalizationManager.Get(LocalizationProperties.CreateMacroButton),
+                    LocalizationManager.Get(Localization.LocalizationProperties.CreateMacroButton),
                     0,
                     TEXT_ALIGN_TYPE.TS_LEFT
-                ) { ButtonParameter = (int)buttonsOption.CreateNewMacro, IsSelectable = false }
+                )
+                { ButtonParameter = (int)buttonsOption.CreateNewMacro, IsSelectable = false }
             );
 
-            Add
-            (
-                new NiceButton
+            if (!isFastAssign)
+            {
+                Add
                 (
-                    0,
-                    _hotkeyBox.Height + 30,
-                    50,
-                    25,
-                    ButtonAction.Activate,
-                    ResGumps.Add
-                ) { ButtonParameter = (int)buttonsOption.AddBtn, IsSelectable = false }
-            );
+                    new NiceButton
+                    (
+                        0,
+                        _hotkeyBox.Height + 30,
+                        50,
+                        25,
+                        ButtonAction.Activate,
+                        LocalizationManager.Get(Localization.LocalizationProperties.Add)
+                    )
+                    { ButtonParameter = (int)buttonsOption.AddBtn, IsSelectable = false }
+                );
 
-            Add
-            (
-                new NiceButton
+                Add
                 (
-                    52,
-                    _hotkeyBox.Height + 30,
-                    50,
-                    25,
-                    ButtonAction.Activate,
-                    ResGumps.Remove
-                ) { ButtonParameter = 1, IsSelectable = false }
+                    new NiceButton
+                    (
+                        52,
+                        _hotkeyBox.Height + 30,
+                        50,
+                        25,
+                        ButtonAction.Activate,
+                        LocalizationManager.Get(Localization.LocalizationProperties.Remove),
+                        0,
                         TEXT_ALIGN_TYPE.TS_LEFT
                     )
                     { ButtonParameter = (int)buttonsOption.RemoveBtn, IsSelectable = false }
                 );
-            } else {
+            }
+            else
+            {
                 Add
                 (
                     new NiceButton
@@ -122,7 +128,7 @@ namespace ClassicUO.Game.UI.Controls
                         170,
                         25,
                         ButtonAction.Activate,
-                        ResGumps.OpenMacroSettings
+                        LocalizationManager.Get(Localization.LocalizationProperties.OpenMacroSettings)
                     )
                     { ButtonParameter = (int)buttonsOption.OpenMacroOptions, IsSelectable = false }
                 );
@@ -160,7 +166,7 @@ namespace ClassicUO.Game.UI.Controls
 
         private void AddEmptyMacro()
         {
-            MacroObject ob = (MacroObject) Macro.Items;
+            MacroObject ob = (MacroObject)Macro.Items;
 
             if (ob.Code == MacroType.None)
             {
@@ -169,7 +175,7 @@ namespace ClassicUO.Game.UI.Controls
 
             while (ob.Next != null)
             {
-                MacroObject next = (MacroObject) ob.Next;
+                MacroObject next = (MacroObject)ob.Next;
 
                 if (next.Code == MacroType.None)
                 {
@@ -222,7 +228,7 @@ namespace ClassicUO.Game.UI.Controls
                 Macro.Items = Macro.Create(MacroType.None);
             }
 
-            MacroObject obj = (MacroObject) Macro.Items;
+            MacroObject obj = (MacroObject)Macro.Items;
 
             while (obj != null)
             {
@@ -233,7 +239,7 @@ namespace ClassicUO.Game.UI.Controls
                     break;
                 }
 
-                obj = (MacroObject) obj.Next;
+                obj = (MacroObject)obj.Next;
             }
 
             _databox.WantUpdateSize = true;
@@ -288,7 +294,7 @@ namespace ClassicUO.Game.UI.Controls
                     }
 
                     SetupKeyByDefault();
-                    UIManager.Add(new MessageBoxGump(250, 150, string.Format(LocalizationManager.Get(LocalizationProperties.ThisKeyCombinationAlreadyExists), macro.Name), null));
+                    UIManager.Add(new MessageBoxGump(250, 150, string.Format(LocalizationManager.Get(Localization.LocalizationProperties.ThisKeyCombinationAlreadyExists), macro.Name), null));
 
                     return;
                 }
@@ -353,7 +359,7 @@ namespace ClassicUO.Game.UI.Controls
                     0,
                     200,
                     _items,
-                    (int) obj.Code
+                    (int)obj.Code
                 )
                 {
                     Tag = obj
@@ -399,14 +405,14 @@ namespace ClassicUO.Game.UI.Controls
                             Height,
                             180,
                             names,
-                            (int) obj.SubCode - offset,
+                            (int)obj.SubCode - offset,
                             300
                         );
 
                         sub.OnOptionSelected += (senderr, ee) =>
                         {
                             Macro.GetBoundByCode(obj.Code, ref count, ref offset);
-                            MacroSubType subType = (MacroSubType) (offset + ee);
+                            MacroSubType subType = (MacroSubType)(offset + ee);
                             obj.SubCode = subType;
                         };
 
@@ -444,13 +450,13 @@ namespace ClassicUO.Game.UI.Controls
                             Height = background.Height - 4
                         };
 
-                        textbox.SetText(obj.HasString() ? ((MacroObjectString) obj).Text : string.Empty);
+                        textbox.SetText(obj.HasString() ? ((MacroObjectString)obj).Text : string.Empty);
 
                         textbox.TextChanged += (sss, eee) =>
                         {
                             if (obj.HasString())
                             {
-                                ((MacroObjectString) obj).Text = ((StbTextBox) sss).Text;
+                                ((MacroObjectString)obj).Text = ((StbTextBox)sss).Text;
                             }
                         };
 
@@ -470,8 +476,8 @@ namespace ClassicUO.Game.UI.Controls
             {
                 WantUpdateSize = true;
 
-                Combobox box = (Combobox) sender;
-                MacroObject currentMacroObj = (MacroObject) box.Tag;
+                Combobox box = (Combobox)sender;
+                MacroObject currentMacroObj = (MacroObject)box.Tag;
 
                 if (e == 0)
                 {
@@ -485,7 +491,7 @@ namespace ClassicUO.Game.UI.Controls
                 }
                 else
                 {
-                    MacroObject newMacroObj = Macro.Create((MacroType) e);
+                    MacroObject newMacroObj = Macro.Create((MacroType)e);
 
                     _control.Macro.Insert(currentMacroObj, newMacroObj);
                     _control.Macro.Remove(currentMacroObj);

@@ -14833,7 +14833,7 @@ namespace ClassicUO.Game.UI.Gumps
             _enableFastSpellsAssign = AddCheckBox
             (
                 rightArea,
-                ResGumps.EnableFastSpellsAssign,
+                LocalizationManager.Get(LocalizationProperties.EnableFastSpellsAssign),
                 _currentProfile.FastSpellsAssign,
                 startX,
                 startY

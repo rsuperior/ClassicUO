@@ -30,16 +30,12 @@
 
 #endregion
 
+using ClassicUO.Utility.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using ClassicUO.Configuration;
-using ClassicUO.Game.Scenes;
-using ClassicUO.Resources;
-using ClassicUO.Utility.Logging;
+using System.Reflection;
 
 namespace ClassicUO.Game.Managers
 {
@@ -56,12 +52,36 @@ namespace ClassicUO.Game.Managers
         {
             LastCharacters = new List<LastCharacterInfo>();
 
-            if (!File.Exists(_lastCharacterFile))
+            FileInfo fileInfo = new FileInfo(_lastCharacterFile);
+
+            if (!fileInfo.Exists)
             {
-                ConfigurationResolver.Save(LastCharacters, _lastCharacterFile);
+                if (fileInfo.Directory != null && !fileInfo.Directory.Exists)
+                {
+                    fileInfo.Directory.Create();
+                }
+
+                fileInfo.Create()?.Dispose();
             }
 
-            LastCharacters = ConfigurationResolver.Load<List<LastCharacterInfo>>(_lastCharacterFile);
+            List<object> objs = (List<object>) MiniJson.Deserialize(File.OpenText(fileInfo.FullName));
+
+            if (objs != null)
+            {
+                foreach (var obj in objs)
+                {
+                    var d = (Dictionary<string, object>)obj;
+
+                    LastCharacterInfo info = new LastCharacterInfo
+                    {
+                        AccountName = d["AccountName"].ToString(),
+                        LastCharacterName = d["LastCharacterName"].ToString(),
+                        ServerName = d["ServerName"].ToString()
+                    };
+
+                    LastCharacters.Add(info);
+                }
+            }
 
             // safety check
             if (LastCharacters == null)
@@ -94,7 +114,17 @@ namespace ClassicUO.Game.Managers
                 });
             }
 
-            ConfigurationResolver.Save(LastCharacters, _lastCharacterFile);
+            // minijson understands simple objects :)
+            Dictionary<string, string> data = new Dictionary<string, string>();
+
+            foreach (var c in LastCharacters)
+            {
+                data["AccountName"] = c.AccountName;
+                data["LastCharacterName"] = c.LastCharacterName;
+                data["ServerName"] = c.ServerName;
+            }
+
+            File.WriteAllText(_lastCharacterFile, MiniJson.Serialize(data));
         }
 
         public static string GetLastCharacter(string account, string server)
