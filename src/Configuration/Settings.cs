@@ -140,11 +140,6 @@ namespace ClassicUO.Configuration
                         settings.ClientVersion = elem.GetString();
                     }
 
-                    if (root.TryGetProperty("lastcharactername", out elem))
-                    {
-                        settings.LastCharacterName = elem.GetString();
-                    }
-
                     if (root.TryGetProperty("lang", out elem))
                     {
                         settings.Language = elem.GetString();

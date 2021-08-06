@@ -42,6 +42,7 @@ using System.Threading;
 using ClassicUO.Configuration;
 using ClassicUO.Data;
 using ClassicUO.Game;
+using ClassicUO.Game.Managers;
 using ClassicUO.IO;
 using ClassicUO.Localization;
 using ClassicUO.Utility;
@@ -345,8 +346,8 @@ namespace ClassicUO
                         break;
 
                     case "lastcharactername":
-                    case "lastcharname":
-                        Settings.GlobalSettings.LastCharacterName = value;
+                    case "lastcharname": 
+                        LastCharacterManager.OverrideLastCharacter(value);
 
                         break;
 
