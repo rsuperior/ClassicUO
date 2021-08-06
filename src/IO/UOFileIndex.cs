@@ -81,7 +81,7 @@ namespace ClassicUO.IO
             0
         );
 
-        public bool Equals(in UOFileIndex other)
+        public bool Equals(UOFileIndex other)
         {
             return (Address, Offset, Length, DecompressedLength) == (other.Address, other.Offset, other.Length, other.DecompressedLength);
         }
