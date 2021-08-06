@@ -297,25 +297,13 @@ namespace ClassicUO.Game.Managers
 
         public static T GetGump<T>(uint? serial = null) where T : Control
         {
-            if (serial.HasValue)
+            for (LinkedListNode<Gump> gump = serial.HasValue ? Gumps.Last : Gumps.First; gump != null; gump = serial.HasValue ? gump.Previous : gump.Next)
             {
-                for (LinkedListNode<Gump> last = Gumps.Last; last != null; last = last.Previous)
-                {
-                    Control c = last.Value;
+                Control c = gump.Value;
 
-                    if (!c.IsDisposed && c.LocalSerial == serial.Value && c is T t)
-                    {
-                        return t;
-                    }
-                }
-            }
-            else
-            {
-                for (LinkedListNode<Gump> first = Gumps.First; first != null; first = first.Next)
+                if (!c.IsDisposed && c is T t)
                 {
-                    Control c = first.Value;
-
-                    if (!c.IsDisposed && c is T t)
+                    if (!serial.HasValue || serial.Value == c.LocalSerial)
                     {
                         return t;
                     }
