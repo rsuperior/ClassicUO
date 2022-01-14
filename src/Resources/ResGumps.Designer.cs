@@ -3081,6 +3081,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reload guard zones.
+        /// </summary>
+        public static string ReloadGuardZones {
+            get {
+                return ResourceManager.GetString("ReloadGuardZones", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reload markers.
         /// </summary>
         public static string ReloadMarkers {

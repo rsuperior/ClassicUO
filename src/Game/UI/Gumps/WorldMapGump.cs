@@ -75,6 +75,8 @@ namespace ClassicUO.Game.UI.Gumps
 
         private int _mapIndex;
         private bool _mapMarkersLoaded;
+        private bool _guardLinesLoaded = false;
+        private GuardLines _guardLines;
 
         private static Texture2D _mapTexture;
         private static uint[] _pixelBuffer;
@@ -128,6 +130,7 @@ namespace ClassicUO.Game.UI.Gumps
             OnResize();
 
             LoadMarkers();
+            LoadGuardLines();
 
             World.WMapManager.SetEnable(true);
 
@@ -404,6 +407,8 @@ namespace ClassicUO.Game.UI.Gumps
 
             ContextMenuItemEntry markersEntry = new ContextMenuItemEntry(ResGumps.MapMarkerOptions);
             markersEntry.Add(new ContextMenuItemEntry(ResGumps.ReloadMarkers, LoadMarkers));
+            markersEntry.Add(new ContextMenuItemEntry(ResGumps.ReloadGuardZones, LoadGuardLines));
+
 
             markersEntry.Add(markerFontEntry);
 
@@ -681,6 +686,39 @@ namespace ClassicUO.Game.UI.Gumps
             public List<WMapMarker> Markers { get; set; }
             public bool Hidden { get; set; }
             public bool IsEditable { get; set; }
+        }
+
+        private class GuardLines
+        {
+            public Dictionary<int, List<Rectangle>> Map;
+            public GuardLines(
+                Dictionary<string, List<List<int>>> guardLinesRawDict   /* straight from the JSON loader */
+            )
+            {
+                Map = new Dictionary<int, List<Rectangle>>();
+
+                foreach (KeyValuePair<string, List<List<int>>> entry in guardLinesRawDict)
+                {
+                    int key = int.Parse(entry.Key);
+                    List<Rectangle> rects = new List<Rectangle>();
+
+                    foreach (List<int> rawList in entry.Value)
+                    {
+                        rects.Add(new Rectangle(rawList[0], rawList[1], rawList[2], rawList[3]));
+                    }
+                    Map[key] = rects;
+                }
+            }
+        }
+
+        private List<Rectangle> GetGuardLinesForMap(int mapIndex)
+        {
+            if (!_guardLinesLoaded)
+            {
+                return null;
+            }
+
+            return _guardLines.Map[mapIndex];
         }
 
         private class CurLoader
@@ -1453,6 +1491,26 @@ namespace ClassicUO.Game.UI.Gumps
             );
         }
 
+
+        private void LoadGuardLines()
+        {
+            Log.Trace("LoadGuardLines()...");
+
+            Dictionary<String, List<List<int>>> guardLineRawDict =
+                ConfigurationResolver.Load<Dictionary<String, List<List<int>>>>(
+                    Path.Combine(_mapFilesPath, "guardlines.json")
+                );
+
+            if (guardLineRawDict is null) {
+                _guardLinesLoaded = false;
+            }
+            else
+            {
+                _guardLines = new GuardLines(guardLineRawDict);
+                _guardLinesLoaded = true;
+            }
+        }
+
         private void LoadMarkers()
         {
             //return Task.Run(() =>
@@ -1891,7 +1949,7 @@ namespace ClassicUO.Game.UI.Gumps
                         size_zoom,
                         size_zoom
                     );
-
+                    
                     var origin = new Vector2
                     (
                         srcRect.Width / 2f,
@@ -1913,6 +1971,7 @@ namespace ClassicUO.Game.UI.Gumps
                     DrawAll
                     (
                         batcher,
+                        srcRect,
                         gX,
                         gY,
                         halfWidth,
@@ -1935,8 +1994,23 @@ namespace ClassicUO.Game.UI.Gumps
             return base.Draw(batcher, x, y);
         }
 
-        private void DrawAll(UltimaBatcher2D batcher, int gX, int gY, int halfWidth, int halfHeight)
+        private void DrawAll(UltimaBatcher2D batcher, Rectangle srcRect, int gX, int gY, int halfWidth, int halfHeight)
         {
+            List<Rectangle> guardLines = GetGuardLinesForMap(World.MapIndex);
+
+            if (!(guardLines is null))
+            {
+                int rectsVisible = 0;
+                foreach (Rectangle rect in guardLines)
+                {
+                    if (rect.Intersects(srcRect))
+                    {
+                        DrawGuardZone(batcher, rect, gX, gY, halfWidth, halfHeight, Zoom);
+                        rectsVisible++;
+                    }
+                }
+            }
+
             if (_showMultis)
             {
                 foreach (House house in World.HouseManager.Houses)
@@ -2592,6 +2666,55 @@ namespace ClassicUO.Game.UI.Gumps
             );
         }
 
+        private Vector2 WorldPointToGumpPoint(int wpx, int wpy, int x, int y, int width, int height, float zoom)
+        {
+            int sx = wpx - _center.X;
+            int sy = wpy - _center.Y;
+
+            Point rot = RotatePoint
+            (
+                sx,
+                sy,
+                zoom,
+                1,
+                _flipMap ? 45f : 0f
+            );
+
+            /* N.B. You don't want AdjustPosition() here if you want to draw rects
+             * that extend beyond the gump's viewport without distoring them. */
+
+            rot.X += x + width;
+            rot.Y += y + height;
+
+            return new Vector2(rot.X, rot.Y);
+        }
+
+        private void DrawGuardZone
+        (
+            UltimaBatcher2D batcher,
+            Rectangle guardZone,
+            int x,
+            int y,
+            int width,
+            int height,
+            float zoom
+        )
+        {
+            Vector3 hueVector = ShaderHueTranslator.GetHueVector(0);
+            Texture2D texture = SolidColorTextureCache.GetTexture(Color.GreenYellow);
+            Vector2[] mappedCorners = new Vector2[4];
+
+            mappedCorners[0] = WorldPointToGumpPoint(guardZone.X, guardZone.Y, x, y, width, height, zoom);
+            mappedCorners[1] = WorldPointToGumpPoint(guardZone.X + guardZone.Width, guardZone.Y, x, y, width, height, zoom);
+            mappedCorners[2] = WorldPointToGumpPoint(guardZone.X + guardZone.Width, guardZone.Y + guardZone.Height, x, y, width, height, zoom);
+            mappedCorners[3] = WorldPointToGumpPoint(guardZone.X, guardZone.Y + guardZone.Height, x, y, width, height, zoom);
+
+            batcher.DrawLine(texture, mappedCorners[0], mappedCorners[1], hueVector, 1);
+            batcher.DrawLine(texture, mappedCorners[1], mappedCorners[2], hueVector, 1);
+            batcher.DrawLine(texture, mappedCorners[2], mappedCorners[3], hueVector, 1);
+            batcher.DrawLine(texture, mappedCorners[3], mappedCorners[0], hueVector, 1);
+        }
+
         private void DrawWMEntity
         (
             UltimaBatcher2D batcher,
@@ -3129,6 +3252,8 @@ namespace ClassicUO.Game.UI.Gumps
             }
         }
     }
+
+
 
     #endregion
 }
