@@ -36,6 +36,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using ClassicUO.Configuration;
@@ -75,9 +77,8 @@ namespace ClassicUO.Game.UI.Gumps
 
         private int _mapIndex;
         private bool _mapMarkersLoaded;
-        private bool _guardLinesLoaded = false;
-        private GuardLines _guardLines;
 
+        private ZoneSets _zoneSets = new ZoneSets();
         private static Texture2D _mapTexture;
         private static uint[] _pixelBuffer;
         private static sbyte[] _zBuffer;
@@ -686,39 +687,6 @@ namespace ClassicUO.Game.UI.Gumps
             public List<WMapMarker> Markers { get; set; }
             public bool Hidden { get; set; }
             public bool IsEditable { get; set; }
-        }
-
-        private class GuardLines
-        {
-            public Dictionary<int, List<Rectangle>> Map;
-            public GuardLines(
-                Dictionary<string, List<List<int>>> guardLinesRawDict   /* straight from the JSON loader */
-            )
-            {
-                Map = new Dictionary<int, List<Rectangle>>();
-
-                foreach (KeyValuePair<string, List<List<int>>> entry in guardLinesRawDict)
-                {
-                    int key = int.Parse(entry.Key);
-                    List<Rectangle> rects = new List<Rectangle>();
-
-                    foreach (List<int> rawList in entry.Value)
-                    {
-                        rects.Add(new Rectangle(rawList[0], rawList[1], rawList[2], rawList[3]));
-                    }
-                    Map[key] = rects;
-                }
-            }
-        }
-
-        private List<Rectangle> GetGuardLinesForMap(int mapIndex)
-        {
-            if (!_guardLinesLoaded)
-            {
-                return null;
-            }
-
-            return _guardLines.Map[mapIndex];
         }
 
         private class CurLoader
@@ -1491,24 +1459,136 @@ namespace ClassicUO.Game.UI.Gumps
             );
         }
 
+        [DataContract]
+        internal class ZonesFileZoneData
+        {
+            [DataMember]
+            public string label = null;
+
+            [DataMember]
+            public string color = null;
+
+            [DataMember]
+            public List<List<int>> polygon = null;
+        }
+
+        [DataContract]
+        internal class ZonesFile
+        {
+            [DataMember]
+            public int mapIndex;
+
+            [DataMember]
+            public List<ZonesFileZoneData> zones;
+        }
+
+        private class Zone {
+            public string label;
+            public Color color;
+            public Rectangle boundingRectangle;
+            public List<Point> vertices;
+
+            public Zone(ZonesFileZoneData data)
+            {
+                label = data.label;
+                color = _colorMap[data.color];
+
+                vertices = new List<Point>();
+
+                int xmin = int.MaxValue;
+                int xmax = int.MinValue;
+                int ymin = int.MaxValue;
+                int ymax = int.MinValue;
+
+                foreach (List<int> rawPoint in data.polygon)
+                {
+                    Point p = new Point(rawPoint[0], rawPoint[1]);
+
+                    if (p.X < xmin) xmin = p.X;
+                    if (p.X > xmax) xmax = p.X;
+                    if (p.Y < ymin) ymin = p.Y;
+                    if (p.Y > ymax) ymax = p.Y;
+
+                    vertices.Add(p);
+                }
+
+                boundingRectangle = new Rectangle(xmin, ymin, xmax - xmin, ymax - ymin);
+            }
+        }
+
+        private class ZoneSet
+        {
+            public int mapIndex;
+            public List<Zone> zones = new List<Zone>();
+
+            public ZoneSet(ZonesFile zf)
+            {
+                mapIndex = zf.mapIndex;
+                foreach (ZonesFileZoneData data in zf.zones)
+                {
+                    zones.Add(new Zone(data));
+                }
+            }
+        }
+
+        private class ZoneSets // top level grouper thing
+        {
+            private Dictionary<string, ZoneSet> zoneSetDict = new Dictionary<string, ZoneSet>();
+
+            public void addZoneSetByFileName(string filename)
+            {
+                FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ZonesFile));
+                ZonesFile zf = null;
+
+                try
+                {
+                    zf = (ZonesFile) ser.ReadObject(fs);
+                }
+                catch (Exception ee)
+                {
+                    Log.Error($"{ee}");
+                }
+                finally
+                {
+                    fs.Dispose();
+                }
+                
+                if (!(zf is null))
+                {
+                    zoneSetDict[filename] = new ZoneSet(zf);
+                }
+            }
+
+            public void removeZoneSetByName(string filename)
+            {
+                zoneSetDict.Remove(filename);
+            }
+
+            public IEnumerable<Zone> getZonesForMapIndex(int mapIndex)
+            {
+                foreach (KeyValuePair<string, ZoneSet> entry in zoneSetDict)
+                {
+                    if (entry.Value.mapIndex != mapIndex)
+                        continue;
+
+                    foreach (Zone zone in entry.Value.zones)
+                    {
+                        yield return zone;
+                    }
+                }
+            }
+        }
 
         private void LoadGuardLines()
         {
             Log.Trace("LoadGuardLines()...");
 
-            Dictionary<String, List<List<int>>> guardLineRawDict =
-                ConfigurationResolver.Load<Dictionary<String, List<List<int>>>>(
-                    Path.Combine(_mapFilesPath, "guardlines.json")
-                );
+            // now what this should do is just get a list of suitable files
 
-            if (guardLineRawDict is null) {
-                _guardLinesLoaded = false;
-            }
-            else
-            {
-                _guardLines = new GuardLines(guardLineRawDict);
-                _guardLinesLoaded = true;
-            }
+            // test
+            _zoneSets.addZoneSetByFileName(Path.Combine(_mapFilesPath, "GuardZones.zones.json"));
+
         }
 
         private void LoadMarkers()
@@ -1996,18 +2076,11 @@ namespace ClassicUO.Game.UI.Gumps
 
         private void DrawAll(UltimaBatcher2D batcher, Rectangle srcRect, int gX, int gY, int halfWidth, int halfHeight)
         {
-            List<Rectangle> guardLines = GetGuardLinesForMap(World.MapIndex);
-
-            if (!(guardLines is null))
+            foreach (Zone zone in _zoneSets.getZonesForMapIndex(World.MapIndex))
             {
-                int rectsVisible = 0;
-                foreach (Rectangle rect in guardLines)
+                if (zone.boundingRectangle.Intersects(srcRect))
                 {
-                    if (rect.Intersects(srcRect))
-                    {
-                        DrawGuardZone(batcher, rect, gX, gY, halfWidth, halfHeight, Zoom);
-                        rectsVisible++;
-                    }
+                    DrawZone(batcher, zone, gX, gY, halfWidth, halfHeight, Zoom);
                 }
             }
 
@@ -2689,10 +2762,10 @@ namespace ClassicUO.Game.UI.Gumps
             return new Vector2(rot.X, rot.Y);
         }
 
-        private void DrawGuardZone
+        private void DrawZone
         (
             UltimaBatcher2D batcher,
-            Rectangle guardZone,
+            Zone zone,
             int x,
             int y,
             int width,
@@ -2701,18 +2774,17 @@ namespace ClassicUO.Game.UI.Gumps
         )
         {
             Vector3 hueVector = ShaderHueTranslator.GetHueVector(0);
-            Texture2D texture = SolidColorTextureCache.GetTexture(Color.GreenYellow);
-            Vector2[] mappedCorners = new Vector2[4];
+            Texture2D texture = SolidColorTextureCache.GetTexture(zone.color);
 
-            mappedCorners[0] = WorldPointToGumpPoint(guardZone.X, guardZone.Y, x, y, width, height, zoom);
-            mappedCorners[1] = WorldPointToGumpPoint(guardZone.X + guardZone.Width, guardZone.Y, x, y, width, height, zoom);
-            mappedCorners[2] = WorldPointToGumpPoint(guardZone.X + guardZone.Width, guardZone.Y + guardZone.Height, x, y, width, height, zoom);
-            mappedCorners[3] = WorldPointToGumpPoint(guardZone.X, guardZone.Y + guardZone.Height, x, y, width, height, zoom);
+            for (int i = 0, j = 1; i < zone.vertices.Count; i++, j++)
+            {
+                if (j >= zone.vertices.Count) j = 0;
 
-            batcher.DrawLine(texture, mappedCorners[0], mappedCorners[1], hueVector, 1);
-            batcher.DrawLine(texture, mappedCorners[1], mappedCorners[2], hueVector, 1);
-            batcher.DrawLine(texture, mappedCorners[2], mappedCorners[3], hueVector, 1);
-            batcher.DrawLine(texture, mappedCorners[3], mappedCorners[0], hueVector, 1);
+                Vector2 start = WorldPointToGumpPoint(zone.vertices[i].X, zone.vertices[i].Y, x, y, width, height, zoom);
+                Vector2 end = WorldPointToGumpPoint(zone.vertices[j].X, zone.vertices[j].Y, x, y, width, height, zoom);
+
+                batcher.DrawLine(texture, start, end, hueVector, 1);
+            }
         }
 
         private void DrawWMEntity
