@@ -1558,4 +1558,7 @@ Client version: '{0}'</value>
   <data name="MapZoneReload" xml:space="preserve">
     <value>Reload Map Zones</value>
   </data>
+  <data name="MapZoneFileLoaded" xml:space="preserve">
+    <value>WorldMap zones loaded '{0}' </value>
+  </data>
 </root>

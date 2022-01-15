@@ -2432,6 +2432,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to WorldMap zones loaded &apos;{0}&apos; .
+        /// </summary>
+        public static string MapZoneFileLoaded {
+            get {
+                return ResourceManager.GetString("MapZoneFileLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show/Hide &apos;{0}&apos;.
         /// </summary>
         public static string MapZoneFileName {

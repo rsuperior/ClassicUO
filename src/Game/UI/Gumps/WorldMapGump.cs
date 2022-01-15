@@ -412,14 +412,13 @@ namespace ClassicUO.Game.UI.Gumps
                 foreach (KeyValuePair<string, ZoneSet> entry in _zoneSets.zoneSetDict)
                 {
                     string filename = entry.Key;
-                    string friendlyFilename = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(entry.Key));  // sic, twice (.zones.json)
                     ZoneSet zoneSet = entry.Value;
 
                     zoneOptions.Add
                     (
                         new ContextMenuItemEntry
                         (
-                            String.Format(ResGumps.MapZoneFileName, friendlyFilename),
+                            String.Format(ResGumps.MapZoneFileName, zoneSet.niceFileName),
                             () => {
                                 zoneSet.hidden = !zoneSet.hidden;
 
@@ -1577,8 +1576,9 @@ namespace ClassicUO.Game.UI.Gumps
             public int mapIndex;
             public List<Zone> zones = new List<Zone>();
             public bool hidden = false;
+            public string niceFileName;
 
-            public ZoneSet(ZonesFile zf, bool initiallyHidden)
+            public ZoneSet(ZonesFile zf, string filename, bool initiallyHidden)
             {
                 mapIndex = zf.mapIndex;
                 foreach (ZonesFileZoneData data in zf.zones)
@@ -1587,10 +1587,18 @@ namespace ClassicUO.Game.UI.Gumps
                 }
 
                 hidden = initiallyHidden;
+                niceFileName = makeNiceFileName(filename);
+            }
+
+            public static string makeNiceFileName(string filename)
+            {
+                // Yes, we invoke the same method twice, because our filenames have two layers of extension
+                // we want to strip off (.zones.json)
+                return Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(filename));
             }
         }
 
-        private class ZoneSets // top level grouper thing
+        private class ZoneSets
         {
             public Dictionary<string, ZoneSet> zoneSetDict = new Dictionary<string, ZoneSet>();
 
@@ -1615,7 +1623,8 @@ namespace ClassicUO.Game.UI.Gumps
 
                 if (!(zf is null))
                 {
-                    zoneSetDict[filename] = new ZoneSet(zf, hidden);
+                    zoneSetDict[filename] = new ZoneSet(zf, filename, hidden);
+                    GameActions.Print(String.Format(ResGumps.MapZoneFileLoaded, zoneSetDict[filename].niceFileName), 0x3A /* yellow green */);
                 }
             }
 
