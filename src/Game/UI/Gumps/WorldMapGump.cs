@@ -213,7 +213,6 @@ namespace ClassicUO.Game.UI.Gumps
             _hiddenZoneFiles = string.IsNullOrEmpty(ProfileManager.CurrentProfile.WorldMapHiddenZoneFiles) ? new List<string>() : ProfileManager.CurrentProfile.WorldMapHiddenZoneFiles.Split(',').ToList();
         }
 
-
         public void SaveSettings()
         {
             if (ProfileManager.CurrentProfile == null)
@@ -465,7 +464,6 @@ namespace ClassicUO.Game.UI.Gumps
 
             ContextMenuItemEntry markersEntry = new ContextMenuItemEntry(ResGumps.MapMarkerOptions);
             markersEntry.Add(new ContextMenuItemEntry(ResGumps.ReloadMarkers, LoadMarkers));
-
 
             markersEntry.Add(markerFontEntry);
 
@@ -2098,7 +2096,7 @@ namespace ClassicUO.Game.UI.Gumps
                         size_zoom,
                         size_zoom
                     );
-                    
+
                     var origin = new Vector2
                     (
                         srcRect.Width / 2f,
@@ -3393,8 +3391,6 @@ namespace ClassicUO.Game.UI.Gumps
             }
         }
     }
-
-
 
     #endregion
 }

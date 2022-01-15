@@ -306,7 +306,6 @@ namespace ClassicUO.Configuration
         public string WorldMapHiddenZoneFiles { get; set; } = string.Empty;
 
 
-
         public static uint GumpsVersion { get; private set; }
 
         public void Save(string path)
