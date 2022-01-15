@@ -78,7 +78,9 @@ namespace ClassicUO.Game.UI.Gumps
         private int _mapIndex;
         private bool _mapMarkersLoaded;
 
+        private List<string> _hiddenZoneFiles;
         private ZoneSets _zoneSets = new ZoneSets();
+
         private static Texture2D _mapTexture;
         private static uint[] _pixelBuffer;
         private static sbyte[] _zBuffer;
@@ -131,7 +133,7 @@ namespace ClassicUO.Game.UI.Gumps
             OnResize();
 
             LoadMarkers();
-            LoadGuardLines();
+            LoadZones();
 
             World.WMapManager.SetEnable(true);
 
@@ -208,7 +210,9 @@ namespace ClassicUO.Game.UI.Gumps
 
 
             _hiddenMarkerFiles = string.IsNullOrEmpty(ProfileManager.CurrentProfile.WorldMapHiddenMarkerFiles) ? new List<string>() : ProfileManager.CurrentProfile.WorldMapHiddenMarkerFiles.Split(',').ToList();
+            _hiddenZoneFiles = string.IsNullOrEmpty(ProfileManager.CurrentProfile.WorldMapHiddenZoneFiles) ? new List<string>() : ProfileManager.CurrentProfile.WorldMapHiddenZoneFiles.Split(',').ToList();
         }
+
 
         public void SaveSettings()
         {
@@ -240,6 +244,7 @@ namespace ClassicUO.Game.UI.Gumps
             ProfileManager.CurrentProfile.WorldMapShowMarkersNames = _showMarkerNames;
 
             ProfileManager.CurrentProfile.WorldMapHiddenMarkerFiles = string.Join(",", _hiddenMarkerFiles);
+            ProfileManager.CurrentProfile.WorldMapHiddenZoneFiles = string.Join(",", _hiddenZoneFiles);
         }
 
         private bool ParseBool(string boolStr)
@@ -391,6 +396,58 @@ namespace ClassicUO.Game.UI.Gumps
             _center.Y = y;
         }
 
+        private void BuildContextMenuForZones(ContextMenuControl parent)
+        {
+            ContextMenuItemEntry zoneOptions = new ContextMenuItemEntry(ResGumps.MapZoneOptions);
+
+            // XXX Is it a good idea to call BuildContextMenu() from within an action stored in the context menu?
+            zoneOptions.Add(new ContextMenuItemEntry(ResGumps.MapZoneReload, () => { LoadZones(); BuildContextMenu(); }));
+            zoneOptions.Add(new ContextMenuItemEntry(""));
+
+            if (_zoneSets.zoneSetDict.Count < 1)
+            {
+                zoneOptions.Add(new ContextMenuItemEntry(ResGumps.MapZoneNone));
+            }
+            else
+            {
+                foreach (KeyValuePair<string, ZoneSet> entry in _zoneSets.zoneSetDict)
+                {
+                    string filename = entry.Key;
+                    string friendlyFilename = Path.GetFileNameWithoutExtension(Path.GetFileNameWithoutExtension(entry.Key));  // sic, twice (.zones.json)
+                    ZoneSet zoneSet = entry.Value;
+
+                    zoneOptions.Add
+                    (
+                        new ContextMenuItemEntry
+                        (
+                            String.Format(ResGumps.MapZoneFileName, friendlyFilename),
+                            () => {
+                                zoneSet.hidden = !zoneSet.hidden;
+
+                                if (!zoneSet.hidden)
+                                {
+                                    string hiddenFile = _hiddenZoneFiles.FirstOrDefault(x => x.Equals(filename));
+
+                                    if (!string.IsNullOrEmpty(hiddenFile))
+                                    {
+                                        _hiddenZoneFiles.Remove(hiddenFile);
+                                    }
+                                }
+                                else
+                                {
+                                    _hiddenZoneFiles.Add(filename);
+                                }
+                            },
+                            true,
+                            !entry.Value.hidden
+                        )
+                    );
+                }
+            }
+
+            parent.Add(zoneOptions);
+        }
+
         private void BuildContextMenu()
         {
             BuildOptionDictionary();
@@ -408,7 +465,6 @@ namespace ClassicUO.Game.UI.Gumps
 
             ContextMenuItemEntry markersEntry = new ContextMenuItemEntry(ResGumps.MapMarkerOptions);
             markersEntry.Add(new ContextMenuItemEntry(ResGumps.ReloadMarkers, LoadMarkers));
-            markersEntry.Add(new ContextMenuItemEntry(ResGumps.ReloadGuardZones, LoadGuardLines));
 
 
             markersEntry.Add(markerFontEntry);
@@ -459,6 +515,8 @@ namespace ClassicUO.Game.UI.Gumps
 
 
             ContextMenu.Add(markersEntry);
+
+            BuildContextMenuForZones(ContextMenu);
 
             ContextMenuItemEntry namesHpBarEntry = new ContextMenuItemEntry(ResGumps.NamesHealthbars);
             namesHpBarEntry.Add(_options["show_your_name"]);
@@ -1520,22 +1578,25 @@ namespace ClassicUO.Game.UI.Gumps
         {
             public int mapIndex;
             public List<Zone> zones = new List<Zone>();
+            public bool hidden = false;
 
-            public ZoneSet(ZonesFile zf)
+            public ZoneSet(ZonesFile zf, bool initiallyHidden)
             {
                 mapIndex = zf.mapIndex;
                 foreach (ZonesFileZoneData data in zf.zones)
                 {
                     zones.Add(new Zone(data));
                 }
+
+                hidden = initiallyHidden;
             }
         }
 
         private class ZoneSets // top level grouper thing
         {
-            private Dictionary<string, ZoneSet> zoneSetDict = new Dictionary<string, ZoneSet>();
+            public Dictionary<string, ZoneSet> zoneSetDict = new Dictionary<string, ZoneSet>();
 
-            public void addZoneSetByFileName(string filename)
+            public void addZoneSetByFileName(string filename, bool hidden)
             {
                 FileStream fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(ZonesFile));
@@ -1553,16 +1614,11 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     fs.Dispose();
                 }
-                
+
                 if (!(zf is null))
                 {
-                    zoneSetDict[filename] = new ZoneSet(zf);
+                    zoneSetDict[filename] = new ZoneSet(zf, hidden);
                 }
-            }
-
-            public void removeZoneSetByName(string filename)
-            {
-                zoneSetDict.Remove(filename);
             }
 
             public IEnumerable<Zone> getZonesForMapIndex(int mapIndex)
@@ -1571,6 +1627,8 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     if (entry.Value.mapIndex != mapIndex)
                         continue;
+                    else if (entry.Value.hidden)
+                        continue;
 
                     foreach (Zone zone in entry.Value.zones)
                     {
@@ -1578,17 +1636,28 @@ namespace ClassicUO.Game.UI.Gumps
                     }
                 }
             }
+
+            public void Clear()
+            {
+                zoneSetDict.Clear();
+            }
         }
 
-        private void LoadGuardLines()
+        private void LoadZones()
         {
-            Log.Trace("LoadGuardLines()...");
+            Log.Trace("LoadZones()...");
 
-            // now what this should do is just get a list of suitable files
+            _zoneSets.Clear();
 
-            // test
-            _zoneSets.addZoneSetByFileName(Path.Combine(_mapFilesPath, "GuardZones.zones.json"));
+            foreach (String filename in Directory.GetFiles(_mapFilesPath, "*.zones.json"))
+            {
+                bool shouldHide = !string.IsNullOrEmpty
+                (
+                    _hiddenZoneFiles.FirstOrDefault(x => x.Contains(filename))
+                );
 
+                _zoneSets.addZoneSetByFileName(filename, shouldHide);
+            }
         }
 
         private void LoadMarkers()

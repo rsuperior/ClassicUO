@@ -2432,6 +2432,42 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show/Hide &apos;{0}&apos;.
+        /// </summary>
+        public static string MapZoneFileName {
+            get {
+                return ResourceManager.GetString("MapZoneFileName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;none&gt;.
+        /// </summary>
+        public static string MapZoneNone {
+            get {
+                return ResourceManager.GetString("MapZoneNone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Map Zone Options.
+        /// </summary>
+        public static string MapZoneOptions {
+            get {
+                return ResourceManager.GetString("MapZoneOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reload Map Zones.
+        /// </summary>
+        public static string MapZoneReload {
+            get {
+                return ResourceManager.GetString("MapZoneReload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mark cave tiles.
         /// </summary>
         public static string MarkCaveTiles {
@@ -3077,15 +3113,6 @@ namespace ClassicUO.Resources {
         public static string ReleasingCtrlRestoresScale {
             get {
                 return ResourceManager.GetString("ReleasingCtrlRestoresScale", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reload guard zones.
-        /// </summary>
-        public static string ReloadGuardZones {
-            get {
-                return ResourceManager.GetString("ReloadGuardZones", resourceCulture);
             }
         }
         
